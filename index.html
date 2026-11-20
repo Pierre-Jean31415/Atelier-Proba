@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Atelier probas première année</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Kalam:wght@400;700&display=swap">
+<style>
+/* Mise en page : cahier à petits carreaux, encre bleue pour le cours, stylo rouge pour les corrections */
+:root{
+  --paper:#f7f9fc; --grid:#e3e9f3; --ink:#1b2a41; --muted:#56657d;
+  --blue:#1f4e8c; --blue-soft:#e4ecf8; --red:#b0181b; --red-soft:#fbe9e9;
+  --ok:#1d7a46; --ok-soft:#e3f3ea; --card:#ffffff; --line:#cdd6e4;
+  --f-head:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Source Sans 3",ui-sans-serif,system-ui,sans-serif;
+  --f-hand:"Kalam","Segoe Print","Comic Sans MS",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#121a27; --grid:#1b2536; --ink:#e4e9f2; --muted:#9aa8bf;
+  --blue:#8db4ef; --blue-soft:#1d2b42; --red:#ff7b74; --red-soft:#3a1f22;
+  --ok:#6fd39b; --ok-soft:#163223; --card:#182235; --line:#2c3a52; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#121a27; --grid:#1b2536; --ink:#e4e9f2; --muted:#9aa8bf;
+  --blue:#8db4ef; --blue-soft:#1d2b42; --red:#ff7b74; --red-soft:#3a1f22;
+  --ok:#6fd39b; --ok-soft:#163223; --card:#182235; --line:#2c3a52; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.5;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:20px 20px;}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px}
+header.top{padding-bottom:14px;border-bottom:2px solid var(--blue)}
+h1{font-family:var(--f-head);font-weight:800;font-size:2em;line-height:1.05;margin:0;color:var(--blue);text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 20px}
+nav.tabs a{font-family:var(--f-head);font-weight:600;text-decoration:none;color:var(--blue);padding:8px 14px;border:1.5px solid var(--blue);border-radius:6px;background:var(--card)}
+nav.tabs a[aria-current="page"]{background:var(--blue);color:var(--paper)}
+button{font:inherit;font-size:.9em;font-weight:600;cursor:pointer;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;padding:7px 13px}
+button:hover:not(:disabled){border-color:var(--blue)}
+button:disabled{cursor:default}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+button.primary{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+h2{font-family:var(--f-head);font-weight:800;font-size:1.45em;margin:0;text-wrap:balance}
+h3{font-family:var(--f-head);font-weight:600;font-size:1.1em;margin:0}
+.lead{max-width:66ch;margin:.4em 0 .8em}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px}
+.stack{display:flex;flex-direction:column;gap:18px}
+.eyebrow{font-size:.75em;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.spread{justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+.small{font-size:.85em;color:var(--muted)}
+/* quiz */
+.hud{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{font-family:var(--f-head);font-weight:600;font-variant-numeric:tabular-nums;background:var(--blue-soft);color:var(--blue);border-radius:999px;padding:3px 12px;font-size:.9em}
+.dots{display:flex;gap:4px;flex:1;min-width:120px}
+.dots i{flex:1;height:6px;border-radius:3px;background:var(--grid)}
+.dots i.ok{background:var(--ok)} .dots i.ko{background:var(--red)} .dots i.cur{background:var(--blue)}
+.qtext{font-size:1.12em;margin:12px 0 14px}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choices button{text-align:left;font-weight:400;font-size:1em;padding:10px 14px}
+.choices button.good{background:var(--ok-soft);border-color:var(--ok)}
+.choices button.bad{background:var(--red-soft);border-color:var(--red)}
+.classgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.classgrid button{justify-content:center;display:flex;padding:14px 6px;font-size:1.05em}
+.classgrid button b{font-family:var(--f-head);color:var(--blue)}
+@media (max-width:420px){.classgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.classbar{background:var(--blue);color:var(--paper);border-radius:8px;padding:8px 14px;font-family:var(--f-head)}
+.classbar b{font-size:1.15em}
+.lettre{display:inline-block;min-width:1.7em;font-family:var(--f-head);color:var(--blue)}
+.expl{margin-top:14px;padding:12px 14px;border-radius:6px;background:var(--blue-soft)}
+.verdict{font-weight:700}
+.okv{color:var(--ok)} .kov{color:var(--red)}
+.rappel{background:var(--blue-soft);border-left:4px solid var(--blue);padding:12px 16px;border-radius:0 6px 6px 0;margin-top:12px}
+.rappel p{margin:.3em 0}
+.note{font-family:var(--f-hand);color:var(--red);font-size:3.2em;line-height:1;font-weight:700}
+.missed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.missed li{border-top:1px dashed var(--line);padding-top:10px}
+.missed .good-ans{font-family:var(--f-hand);color:var(--red)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.stat{font-size:.9em}
+.bar{height:6px;border-radius:3px;background:var(--grid);overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--ok)}
+.scroll{overflow-x:auto}
+table.t{border-collapse:collapse;width:100%;font-size:.92em;min-width:540px}
+table.t th,table.t td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.t th{background:var(--card);font-family:var(--f-head);font-weight:600}
+/* fiches */
+.flash{min-height:220px;display:flex;flex-direction:column;gap:12px}
+.flash .recto{font-size:1.15em;font-weight:600}
+.flash .verso{font-family:var(--f-hand);color:var(--red);font-size:1.1em}
+.boxes{display:flex;gap:8px;flex-wrap:wrap}
+.boxes span{background:var(--blue-soft);border-radius:6px;padding:4px 10px;font-size:.85em;font-variant-numeric:tabular-nums}
+/* méthode */
+.method ol{padding-left:1.3em;display:flex;flex-direction:column;gap:12px;max-width:70ch}
+.method li b{color:var(--blue)}
+.phrase{font-family:var(--f-hand);color:var(--red);display:block;margin-top:4px}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (max-width:560px){h1{font-size:1.6em}.note{font-size:2.6em}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Atelier probas première année</h1>
+    <p class="sub">Fait à partir du cours de première année de BCPST 2A.</p>
+    <p class="sub">BCPST — dénombrement, probabilités, variables aléatoires finies</p>
+  </header>
+  <nav class="tabs" aria-label="Sections">
+    <a href="#quiz" data-view="quiz">Quiz</a>
+    <a href="#cours" data-view="cours">Cours à savoir</a>
+    <a href="#methode" data-view="methode">Comment apprendre</a>
+  </nav>
+  <main>
+    <section id="v-quiz" class="stack"></section>
+    <section id="v-cours" class="stack" hidden></section>
+    <section id="v-methode" class="stack method" hidden></section>
+  </main>
+</div>
+
+<script>
+window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']],processEscapes:true},svg:{fontCache:'global'},options:{enableMenu:false}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js" async></script>
+<script>
+const R=String.raw;
+function tex(el){const M=window.MathJax;if(M&&M.startup&&M.startup.promise){M.startup.promise=M.startup.promise.then(()=>M.typesetPromise([el])).catch(()=>{});}}
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function hash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return "q"+(h>>>0).toString(36)}
+const THEMES={res:"Résultat / événement",den:"Dénombrement",par:"Parties d'un ensemble",indic:"Fonctions indicatrices",union:"Systèmes complets, réunions, crible",ind:"Incompatibles / indépendants",cond:"Probabilités conditionnelles",fpt:"Probabilités totales",dist:"Totales ou composées ?",var:"Variables aléatoires",loi:"Lois usuelles"};
+
+/* ======================= RAPPELS DE COURS ======================= */
+const RAPPEL={
+res:R`<p>L'ensemble des résultats possibles est appelé l'<b>univers</b>, noté $\Omega$. Un <b>résultat</b> est un <b>élément</b> $\omega$ de $\Omega$ : $\omega\in\Omega$.</p>
+<p>Les <b>événements</b> sont les <b>parties</b> de $\Omega$ : $A\subset\Omega$, c'est-à-dire $A\in\mathscr P(\Omega)$. Un événement est un ensemble de résultats.</p>
+<p>Les singletons $\{\omega\}$ sont les <b>événements élémentaires</b>. $\varnothing$ est l'événement impossible, $\Omega$ l'événement certain. Si $\omega\in A$, on dit que « $\omega$ réalise $A$ ».</p>
+<p>On calcule $\mathbb P(A)$ pour un événement. Pour un résultat, on écrit $\mathbb P(\{\omega\})$, jamais $\mathbb P(\omega)$. En situation d'équiprobabilité : $\mathbb P(A)=\dfrac{\operatorname{card}(A)}{\operatorname{card}(\Omega)}$.</p>`,
+den:R`<p>Dans tout ce rappel, $E$ est un ensemble fini de <b>cardinal $n$</b> et $p\in\mathbb N^*$.</p>
+<p>Deux questions avant tout calcul : <b>l'ordre compte-t-il ? les répétitions sont-elles possibles ?</b></p>
+<div class="scroll"><table class="t"><thead><tr><th>Ordre</th><th>Répétitions</th><th>Un résultat est…</th><th>Nombre</th><th>Situation type</th></tr></thead><tbody>
+<tr><td>oui</td><td>oui</td><td>une $p$-liste de $E$ (élément de $E^p$)</td><td>$n^p$</td><td>tirages successifs avec remise</td></tr>
+<tr><td>oui</td><td>non</td><td>une $p$-liste sans répétition (arrangement)</td><td>$n(n-1)\cdots(n-p+1)=\dfrac{n!}{(n-p)!}$</td><td>tirages successifs sans remise</td></tr>
+<tr><td>oui</td><td>non, $p=n$</td><td>une permutation de $E$</td><td>$n!$</td><td>choisir successivement tous les objets</td></tr>
+<tr><td>non</td><td>non</td><td>une $p$-combinaison (partie à $p$ éléments)</td><td>$\dbinom np=\dfrac{n(n-1)\cdots(n-p+1)}{p!}$</td><td>tirage simultané</td></tr></tbody></table></div>
+<p>Une liste s'écrit entre <b>parenthèses</b> $(x_1,\dots,x_p)$, une combinaison entre <b>accolades</b> $\{x_1,\dots,x_p\}$. On note $\mathscr P_p(E)$ l'ensemble des $p$-combinaisons de $E$.</p>
+<p>Avec une $p$-combinaison, on construit $p!$ listes sans répétition : c'est pourquoi $n(n-1)\cdots(n-p+1)=p!\dbinom np$.</p>
+<p>Cardinaux : $\operatorname{card}(A\cup B)=\operatorname{card}(A)+\operatorname{card}(B)-\operatorname{card}(A\cap B)$ ; $\operatorname{card}(\overline A)=\operatorname{card}(E)-\operatorname{card}(A)$ ; $\operatorname{card}(A\times B)=\operatorname{card}(A)\operatorname{card}(B)$ ; $\operatorname{card}([\![a;b]\!])=b-a+1$.</p>`,
+par:R`<p>$A$ est une <b>partie</b> de $E$, et on écrit $A\subset E$, si tout élément de $A$ est un élément de $E$.</p>
+<p>$\mathscr P(E)$ est l'ensemble de <b>toutes</b> les parties de $E$, y compris $\varnothing$ et $E$. Exemple : $\mathscr P(\{a,b\})=\{\varnothing,\{a\},\{b\},\{a,b\}\}$.</p>
+<p>Si $\operatorname{card}(E)=n$, alors $\operatorname{card}\big(\mathscr P(E)\big)=2^n$. Deux démonstrations du cours :</p>
+<p>① les $\mathscr P_p(E)$, pour $0\leqslant p\leqslant n$, forment une partition de $\mathscr P(E)$, donc $\operatorname{card}\big(\mathscr P(E)\big)=\sum_{p=0}^n\binom np=(1+1)^n=2^n$ ;</p>
+<p>② à chaque partie $A$, on associe la liste $(x_1,\dots,x_n)\in\{0;1\}^n$ avec $x_i=1$ si $e_i\in A$ et $x_i=0$ sinon : c'est une bijection, et $\operatorname{card}\big(\{0;1\}^n\big)=2^n$.</p>
+<p>$a\in E$ (élément), $\{a\}\subset E$ (partie), $\{a\}\in\mathscr P(E)$.</p>`,
+indic:R`<p><b>Définition.</b> Si $A$ est une partie de $E$, la fonction indicatrice de $A$ est l'application $\mathbf 1_A$ de $E$ dans $\{0,1\}$ qui à $x$ associe $1$ si $x\in A$ et $0$ sinon. Si $A=\{x\in E\mid P(x)\}$, on note aussi $\mathbf 1_{P(x)}=\mathbf 1_A(x)$.</p>
+<p><b>Propriétés.</b> ① $\mathbf 1_A(x)=1\iff x\in A$ ; ② $\mathbf 1_{A\cap B}=\mathbf 1_A\times\mathbf 1_B$ ; ③ $\mathbf 1_{\overline A}=1-\mathbf 1_A$ ; ④ $\mathbf 1_A=\mathbf 1_B\iff A=B$ ; ⑤ $\mathbf 1_A\leqslant\mathbf 1_B\iff A\subset B$. Enfin $\mathbf 1_\varnothing=0$ et $\mathbf 1_E=1$ (applications constantes).</p>
+<p><b>Dénombrer.</b> Si $E$ est fini : $\operatorname{card}(A)=\sum_{x\in E}\mathbf 1_A(x)$, $\ \operatorname{card}(A\cap B)=\sum_{x\in A}\mathbf 1_B(x)$, $\ \sum_{x\in E}\mathbf 1_{P(x)}=\operatorname{card}\big(\{x\in E\mid P(x)\}\big)$.</p>
+<p><b>En probabilités.</b> Si $A$ est un événement, $\mathbf 1_A\hookrightarrow\mathcal B\big(\mathbb P(A)\big)$ : $\mathbb E(\mathbf 1_A)=\mathbb P(A)$ et $V(\mathbf 1_A)=\mathbb P(A)\big(1-\mathbb P(A)\big)$.</p>`,
+union:R`<p><b>Système complet d'événements.</b> $(A_1,\dots,A_n)$ est un système complet d'événements si ① $\bigcup_{k=1}^n A_k=\Omega$ et ② $\forall (i,j)\in[\![1;n]\!]^2,\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$. Chaque résultat réalise alors exactement un des $A_k$. Conséquence : $\sum_{i=1}^n\mathbb P(A_i)=1$. Par exemple, $(A,\overline A)$ est un système complet, d'où $\mathbb P(\overline A)=1-\mathbb P(A)$.</p>
+<p><b>Probabilité d'une réunion disjointe.</b> Si $\forall (i,j)\in[\![1;n]\!]^2,\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$, alors $\mathbb P\Big(\bigcup_{i=1}^n A_i\Big)=\sum_{i=1}^n\mathbb P(A_i)$ : une <b>somme</b>. De même pour les cardinaux : $\operatorname{card}\Big(\bigcup_{i=1}^p A_i\Big)=\sum_{i=1}^p\operatorname{card}(A_i)$.</p>
+<p><b>Formule du crible</b>, pour des événements quelconques :</p>
+<p>ordre 2 : $\mathbb P(A\cup B)=\mathbb P(A)+\mathbb P(B)-\mathbb P(A\cap B)$ ;</p>
+<p>ordre 3 : $\mathbb P(A\cup B\cup C)=\mathbb P(A)+\mathbb P(B)+\mathbb P(C)-\mathbb P(A\cap B)-\mathbb P(A\cap C)-\mathbb P(B\cap C)+\mathbb P(A\cap B\cap C)$.</p>
+<p>Les mêmes formules valent pour les cardinaux. Si les événements sont incompatibles, les intersections sont vides et on retrouve la réunion disjointe.</p>
+<p><b>Conséquences.</b> Si $A\subset B$, alors $\mathbb P(A)\leqslant\mathbb P(B)$. Pour tous événements : $\mathbb P\Big(\bigcup_{k=1}^n A_k\Big)\leqslant\sum_{k=1}^n\mathbb P(A_k)$.</p>`,
+ind:R`<div class="scroll"><table class="t"><thead><tr><th></th><th>Incompatibles</th><th>Indépendants</th></tr></thead><tbody>
+<tr><td>Définition</td><td>$A\cap B=\varnothing$</td><td>$\mathbb P(A\cap B)=\mathbb P(A)\,\mathbb P(B)$</td></tr>
+<tr><td>Dépend de $\mathbb P$ ?</td><td>non : on le voit sur les ensembles</td><td>oui : il faut calculer</td></tr>
+<tr><td>Sens</td><td>A et B ne peuvent pas se produire ensemble</td><td>savoir que A est réalisé ne change pas la probabilité de B</td></tr>
+<tr><td>Sert à</td><td>$\mathbb P(A\cup B)=\mathbb P(A)+\mathbb P(B)$</td><td>$\mathbb P(A\cap B)=\mathbb P(A)\,\mathbb P(B)$</td></tr></tbody></table></div>
+<p><b>Piège.</b> Si $\mathbb P(A)>0$, $\mathbb P(B)>0$ et $A$, $B$ incompatibles, alors ils ne sont <b>pas</b> indépendants : $\mathbb P(A\cap B)=0\neq\mathbb P(A)\mathbb P(B)$.</p>
+<p>$A$ et $B$ indépendants équivaut à $A$ et $\overline B$ indépendants (de même pour $\overline A$ et $B$, et pour $\overline A$ et $\overline B$).</p>
+<p><b>Mutuellement indépendants</b> : $\mathbb P\Big(\bigcap_{j\in J}A_j\Big)=\prod_{j\in J}\mathbb P(A_j)$ pour toute partie $J$ de $[\![1;n]\!]$. Mutuellement indépendants entraîne 2 à 2 indépendants ; la réciproque est fausse.</p>
+<p><b>Expériences indépendantes</b> : des événements liés à des épreuves distinctes sont mutuellement indépendants (tirages successifs avec remise, lancers successifs…).</p>`,
+cond:R`<p><b>Définition.</b> Si $\mathbb P(A)\neq0$, l'application $\mathbb P_A:B\mapsto\dfrac{\mathbb P(A\cap B)}{\mathbb P(A)}$ est une probabilité, appelée probabilité sachant $A$. On note aussi $\mathbb P_A(B)=\mathbb P(B\,|\,A)$, mais « $B\,|\,A$ » n'est pas un événement.</p>
+<p>$\mathbb P_A(A)=1$. En situation d'équiprobabilité : $\mathbb P_A(B)=\dfrac{\operatorname{card}(A\cap B)}{\operatorname{card}(A)}$.</p>
+<p><b>Probabilités composées.</b> $\mathbb P(A\cap B)=\mathbb P(A)\,\mathbb P_A(B)$, et plus généralement, si $\mathbb P(A_1\cap\dots\cap A_{n-1})\neq0$ :
+$$\mathbb P(A_1\cap\dots\cap A_n)=\mathbb P(A_1)\,\mathbb P_{A_1}(A_2)\cdots\mathbb P_{A_1\cap\dots\cap A_{n-1}}(A_n).$$</p>
+<p>$\mathbb P_A$ est une probabilité : $\mathbb P_A(\overline B)=1-\mathbb P_A(B)$ et $\mathbb P_A(B\cup C)=\mathbb P_A(B)+\mathbb P_A(C)-\mathbb P_A(B\cap C)$.</p>
+<p><b>Pièges.</b> $\mathbb P_A(B)\neq\mathbb P_B(A)$ en général. $\mathbb P_A(B)\neq\mathbb P(A\cap B)$. $\mathbb P_{\overline A}(B)$ n'est pas $1-\mathbb P_A(B)$. Dans un arbre, la branche de $A$ vers $B$ porte $\mathbb P_A(B)$.</p>`,
+fpt:R`<p><b>Système complet d'événements.</b> $(A_1,\dots,A_n)$ est un système complet d'événements si ① $\bigcup_{k=1}^n A_k=\Omega$ et ② $\forall (i,j)\in[\![1;n]\!]^2,\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$. Alors $\sum_{i=1}^n\mathbb P(A_i)=1$.</p>
+<p><b>Formule des probabilités totales : deux versions.</b></p>
+<p>① Si $(A_1,\dots,A_n)$ est un système complet d'événements, alors pour tout événement $B$ : $\mathbb P(B)=\sum_{i=1}^n \mathbb P(A_i\cap B)$. Aucune autre hypothèse.</p>
+<p>② Si $(A_1,\dots,A_n)$ est un système complet d'événements <b>non négligeables</b> (pour tout $i$, $\mathbb P(A_i)\neq0$), alors pour tout événement $B$ :
+$$\mathbb P(B)=\sum_{i=1}^n \mathbb P(A_i)\times\mathbb P_{A_i}(B).$$
+L'hypothèse sert à définir les $\mathbb P_{A_i}$. (Avec la convention $\mathbb P(A_i)\mathbb P_{A_i}(B)=0$ si $\mathbb P(A_i)=0$, on peut s'en passer.)</p>
+<p><b>Quand l'utiliser ?</b> Quand l'expérience se fait en deux temps et que la probabilité de $B$ dépend du premier temps (le dé, l'urne choisie, malade ou non). Sur un arbre : $\mathbb P(B)$ est la somme des probabilités des chemins qui mènent à $B$.</p>
+<p><b>Rédaction.</b> ① Nommer les événements. ② Le système complet porte sur le premier temps : le justifier. ③ Pour la version ②, vérifier que les $\mathbb P(A_i)$ sont non nulles. ④ Écrire « D'après la formule des probabilités totales », puis calculer.</p>
+<p><b>Formule de Bayes.</b> Si $(A_1,\dots,A_n)$ est un système complet d'événements non négligeables et $B$ un événement non négligeable : $\mathbb P_B(A_j)=\dfrac{\mathbb P(A_j)\,\mathbb P_{A_j}(B)}{\sum_{i=1}^n\mathbb P(A_i)\,\mathbb P_{A_i}(B)}$.</p>
+<p>Avec une variable aléatoire : les $[X=x_i]$ forment un système complet, donc $\mathbb P(A)=\sum_{i=1}^r\mathbb P([X=x_i])\,\mathbb P_{[X=x_i]}(A)$.</p>`,
+dist:R`<div class="scroll"><table class="t"><thead><tr><th></th><th>Probabilités composées</th><th>Probabilités totales</th></tr></thead><tbody>
+<tr><td>On cherche</td><td>la probabilité d'une <b>intersection</b> : $\mathbb P(A_1\cap\dots\cap A_n)$</td><td>la probabilité d'un événement $B$ auquel <b>plusieurs chemins</b> mènent : $\mathbb P(B)$</td></tr>
+<tr><td>Indices</td><td>« et », « … puis … », « les trois boules sont rouges »</td><td>« la 2e boule est rouge » (sans rien dire de la 1re), « une pièce prise au hasard est défectueuse »</td></tr>
+<tr><td>Sur l'arbre</td><td>on <b>multiplie</b> le long d'<b>un</b> chemin</td><td>on <b>additionne</b> les probabilités de <b>tous</b> les chemins qui mènent à $B$</td></tr>
+<tr><td>Formule</td><td>$\mathbb P(A_1)\,\mathbb P_{A_1}(A_2)\cdots\mathbb P_{A_1\cap\dots\cap A_{n-1}}(A_n)$</td><td>$\sum_{i=1}^n\mathbb P(A_i)\times\mathbb P_{A_i}(B)$</td></tr>
+<tr><td>Hypothèse</td><td>$\mathbb P(A_1\cap\dots\cap A_{n-1})\neq0$</td><td>$(A_1,\dots,A_n)$ système complet d'événements non négligeables</td></tr></tbody></table></div>
+<p><b>Les deux formules travaillent ensemble</b> : chaque terme $\mathbb P(A_i)\times\mathbb P_{A_i}(B)$ de la formule des probabilités totales est la probabilité $\mathbb P(A_i\cap B)$ d'un chemin, calculée par les probabilités composées.</p>
+<p><b>Erreurs classiques.</b> Ne garder qu'un chemin ($\mathbb P(B)=\mathbb P(A_1)\mathbb P_{A_1}(B)$) ; oublier les poids ($\mathbb P(B)=\sum\mathbb P_{A_i}(B)$) ; additionner le long d'un chemin au lieu de multiplier.</p>
+<p><b>Contrôle</b> : $\mathbb P(B)$ obtenue par la formule des probabilités totales est une moyenne pondérée des $\mathbb P_{A_i}(B)$, donc comprise entre la plus petite et la plus grande.</p>`,
+var:R`<p>Les <b>variables aléatoires</b> sur $\Omega$ sont les applications de $\Omega$ dans $\mathbb R$. $X(\Omega)=\{X(\omega)\mid\omega\in\Omega\}$ est l'ensemble des valeurs prises. $[X=a]=\{\omega\in\Omega\mid X(\omega)=a\}$ est un <b>événement</b>.</p>
+<p>Si $X(\Omega)=\{x_1,\dots,x_r\}$, les $[X=x_i]$ forment un <b>système complet d'événements</b>.</p>
+<p><b>Déterminer la loi de $X$</b> : ① donner $X(\Omega)$ ; ② donner $\mathbb P([X=x_i])$ pour toutes les valeurs $x_i$. Ces probabilités sont positives et ont pour somme 1.</p>
+<p><b>Fonction de répartition</b> : $F:x\mapsto\mathbb P([X\leqslant x])$, de $\mathbb R$ dans $[0;1]$. $\mathbb P([a\lt X\leqslant b])=F(b)-F(a)$. $F$ est croissante, constante par morceaux, continue à droite, discontinue à gauche en chaque $x_i$ où $\mathbb P([X=x_i])\neq0$ ; elle tend vers 0 en $-\infty$ et vers 1 en $+\infty$.</p>
+<p><b>Espérance</b> : $\mathbb E(X)=\sum_{x\in X(\Omega)}x\,\mathbb P([X=x])$. <b>Transfert</b> : $\mathbb E\big(\varphi(X)\big)=\sum_{x\in X(\Omega)}\varphi(x)\,\mathbb P([X=x])$. <b>Linéarité</b> (toujours vraie) : $\mathbb E(aX+bY)=a\,\mathbb E(X)+b\,\mathbb E(Y)$.</p>
+<p><b>Variance</b> : $V(X)=\mathbb E\big((X-\mathbb E(X))^2\big)\geqslant0$. Kœnig-Huygens : $V(X)=\mathbb E(X^2)-\big(\mathbb E(X)\big)^2$. $V(aX+b)=a^2\,V(X)$. Écart-type : $\sigma=\sqrt{V(X)}$. Si $V(X)=0$, alors $\mathbb P([X=m])=1$ : $X$ est quasi-certaine.</p>
+<p><b>Centrée</b> : $\mathbb E(X)=0$. <b>Réduite</b> : $V(X)=1$. $X^*=\dfrac{X-\mathbb E(X)}{\sigma_X}$ est la variable centrée réduite associée à $X$.</p>
+<p><b>Indépendance</b> : $X$ et $Y$ sont indépendantes si, pour tout $(x,y)\in X(\Omega)\times Y(\Omega)$, $\mathbb P([X=x]\cap[Y=y])=\mathbb P([X=x])\,\mathbb P([Y=y])$. Alors $u(X)$ et $v(Y)$ sont indépendantes, $\mathbb E(XY)=\mathbb E(X)\,\mathbb E(Y)$ et $V(X+Y)=V(X)+V(Y)$. Sans indépendance, ces deux formules sont fausses en général.</p>`,
+loi:R`<div class="scroll"><table class="t"><thead><tr><th>Loi</th><th>Situation type</th><th>$X(\Omega)$ et $\mathbb P([X=k])$</th><th>$\mathbb E(X)$</th><th>$V(X)$</th></tr></thead><tbody>
+<tr><td>Certaine égale à $a$</td><td>$X$ constante</td><td>$\{a\}$, $\mathbb P([X=a])=1$</td><td>$a$</td><td>$0$</td></tr>
+<tr><td>Bernoulli $\mathcal B(p)$, $p\in\,]0,1[$</td><td>une épreuve, succès ou échec ; $X=1$ si succès</td><td>$\{0,1\}$, $\mathbb P([X=1])=p$</td><td>$p$</td><td>$p(1-p)$</td></tr>
+<tr><td>Uniforme $\mathcal U([\![1;n]\!])$</td><td>$n$ valeurs équiprobables</td><td>$[\![1;n]\!]$, $\dfrac1n$</td><td>$\dfrac{n+1}2$</td><td>$\dfrac{n^2-1}{12}$</td></tr>
+<tr><td>Uniforme $\mathcal U([\![a;b]\!])$</td><td>$b-a+1$ valeurs équiprobables</td><td>$[\![a;b]\!]$, $\dfrac1{b-a+1}$</td><td>$\dfrac{a+b}2$</td><td>$\dfrac{(b-a+1)^2-1}{12}$</td></tr>
+<tr><td>Binomiale $\mathscr B(n,p)$</td><td>schéma de Bernoulli : $X$ compte les succès</td><td>$[\![0;n]\!]$, $\dbinom nk p^k(1-p)^{n-k}$</td><td>$np$</td><td>$np(1-p)$</td></tr></tbody></table></div>
+<p><b>Schéma de Bernoulli.</b> On répète $n$ fois, de façon <b>identique et indépendante</b>, une épreuve à deux issues (succès de probabilité $p$, ou échec). Le nombre $X$ de succès suit $\mathscr B(n,p)$. Si les épreuves ne sont pas indépendantes (tirages <b>sans</b> remise) ou si $p$ change, ce n'est pas une binomiale.</p>
+<p><b>Rédaction type.</b> « Cette expérience est constituée de $n$ épreuves de Bernoulli identiques et indépendantes (succès : … de probabilité $p$). $X$ compte le nombre de succès, donc $X\hookrightarrow\mathscr B(n,p)$. »</p>
+<p><b>Autres résultats.</b> Si $A$ est un événement, $\mathbf 1_A\hookrightarrow\mathcal B\big(\mathbb P(A)\big)$. La somme de $n$ variables de Bernoulli de paramètre $p$ mutuellement indépendantes suit $\mathscr B(n,p)$.</p>`
+};
+
+/* ======================= QUESTIONS ======================= */
+const Q=[
+{t:"res",q:R`On lance trois fois une pièce : $\Omega=\{P,F\}^3$. Que représente $(P,F,F)$ ?`,c:["Un résultat","Un événement"],a:0,e:R`$(P,F,F)$ est un triplet, donc un élément de $\Omega$.`},
+{t:"res",q:R`On lance trois fois une pièce : $\Omega=\{P,F\}^3$. « Obtenir exactement un Pile » est :`,c:["Un résultat","Un événement"],a:1,e:R`C'est la partie $\{(P,F,F),(F,P,F),(F,F,P)\}$ de $\Omega$.`},
+{t:"res",q:R`Quelle écriture est correcte ?`,c:[R`$\mathbb P\big((P,F,F)\big)$`,R`$\mathbb P\big(\{(P,F,F)\}\big)$`],a:1,e:R`$\mathbb P$ s'applique à des événements, c'est-à-dire à des parties de $\Omega$.`},
+{t:"res",q:R`On tire simultanément 2 boules dans une urne de 5 boules numérotées. $\{1,4\}$ est :`,c:["Un résultat","Un événement"],a:0,e:R`Ici $\Omega$ est l'ensemble des parties à 2 éléments de $[\![1;5]\!]$ : $\{1,4\}$ est un élément de $\Omega$, donc un résultat.`},
+{t:"res",q:R`On lance un dé : $\Omega=[\![1;6]\!]$. Combien y a-t-il d'événements ?`,c:["6","12","36","64"],a:3,e:R`Les événements sont les parties de $\Omega$ : $2^6=64$. Il n'y a que 6 résultats.`},
+{t:"res",q:R`$\Omega$ lui-même est :`,c:["Un résultat","L'événement certain","L'événement impossible"],a:1,e:R`$\Omega\subset\Omega$ : c'est l'événement certain. L'événement impossible est $\varnothing$.`},
+{t:"res",q:R`On lance deux dés : $\Omega=[\![1;6]\!]^2$. Combien de résultats contient l'événement « obtenir au moins un 6 » ?`,c:["11","12","6","36"],a:0,e:R`Contraire : aucun 6, soit $5^2=25$ résultats. Donc $36-25=11$.`},
+{t:"res",q:R`On tire simultanément 3 boules parmi 10 boules numérotées. Combien de résultats contient l'événement « la boule 1 est tirée » ?`,c:["36","9","120","3"],a:0,e:R`Ce sont les $\{1,a,b\}$ : on choisit les 2 autres boules parmi 9, soit $\binom92=36$.`},
+{t:"res",q:R`« Le résultat $\omega$ réalise l'événement $A$ » signifie :`,c:[R`$\omega\in A$`,R`$\omega=A$`,R`$A\subset\omega$`],a:0,e:R`$\omega$ est un élément, $A$ une partie de $\Omega$.`},
+{t:"res",q:R`On lance deux dés équilibrés. $\mathbb P(\text{« la somme vaut 8 »})=$`,c:[R`$\frac5{36}$`,R`$\frac1{11}$`,R`$\frac18$`],a:0,e:R`Équiprobabilité sur $\Omega=[\![1;6]\!]^2$ : $\dfrac{\operatorname{card}(A)}{\operatorname{card}(\Omega)}=\dfrac5{36}$. Les 11 sommes possibles ne sont pas équiprobables.`},
+{t:"res",q:R`On lance deux dés. $\{(6,6)\}$ est :`,c:["Un résultat","Un événement"],a:1,e:R`C'est une partie de $\Omega$ à un seul élément : un événement élémentaire. $(6,6)$, sans accolades, est un résultat.`},
+{t:"den",q:"Nombre de codes de 3 lettres (de A à Z), répétitions autorisées :",c:[R`$26^3$`,R`$26\times25\times24$`,R`$\binom{26}{3}$`],a:0,e:R`Ordre et répétitions : 3-liste, $26^3=17\,576$.`},
+{t:"den",q:"Nombre de façons de choisir 2 délégués (rôles identiques) dans une classe de 40 :",c:[R`$40^2$`,R`$40\times39$`,R`$\binom{40}{2}$`],a:2,e:R`Pas d'ordre, pas de répétition : partie à 2 éléments, $\binom{40}{2}=780$.`},
+{t:"den",q:"Nombre de façons d'élire un délégué et un suppléant dans une classe de 40 :",c:[R`$\binom{40}{2}$`,R`$40\times39$`,R`$40^2$`],a:1,e:R`Les rôles sont différents, donc l'ordre compte : 2-liste sans répétition, $40\times39=1560$.`},
+{t:"den",q:"On tire successivement sans remise 3 boules parmi 10 boules numérotées. Un résultat est :",c:[R`une 3-liste de $[\![1;10]\!]$`,"une 3-liste sans répétition","une 3-combinaison"],a:1,e:R`Successivement : l'ordre compte. Sans remise : pas de répétition. Il y en a $10\times9\times8=720$.`},
+{t:"den",q:"On tire successivement avec remise 3 boules parmi 10. Nombre de résultats :",c:[R`$10^3$`,R`$10\times9\times8$`,R`$\binom{10}{3}$`],a:0,e:R`3-listes : $10^3=1000$.`},
+{t:"den",q:"Nombre d'anagrammes du mot MATHS (5 lettres distinctes) :",c:[R`$5!$`,R`$5^5$`,R`$\binom55$`],a:0,e:R`Permutations des 5 lettres : $5!=120$.`},
+{t:"den",q:"Une liste s'écrit entre … et une combinaison entre …",c:["parenthèses / accolades","accolades / parenthèses","crochets / parenthèses"],a:0,e:R`$(1,2)\neq(2,1)$ mais $\{1,2\}=\{2,1\}$ : changer l'ordre change la liste, pas la combinaison.`},
+{t:"den",q:R`Une $p$-combinaison de $E$ est :`,c:[R`une partie de $E$ à $p$ éléments`,R`une $p$-liste sans répétition`,R`un élément de $E^p$`],a:0,e:R`On note $\mathscr P_p(E)$ l'ensemble des $p$-combinaisons de $E$ ; il y en a $\binom np$.`},
+{t:"den",q:R`$E$ est un ensemble de cardinal $n$ et $p\leqslant n$. Avec une $p$-combinaison de $E$, combien de $p$-listes sans répétition peut-on construire ?`,c:[R`$p!$`,R`$p$`,R`$\binom np$`,R`$n^p$`],a:0,e:R`Ce sont les permutations de la combinaison : $p!$. D'où $n(n-1)\cdots(n-p+1)=p!\binom np$.`},
+{t:"den",q:R`$\operatorname{card}(A)=25$, $\operatorname{card}(B)=18$, $\operatorname{card}(A\cap B)=10$. $\operatorname{card}(A\cup B)=$`,c:["33","43","53","8"],a:0,e:R`$\operatorname{card}(A\cup B)=\operatorname{card}(A)+\operatorname{card}(B)-\operatorname{card}(A\cap B)=25+18-10=33$.`},
+{t:"den",q:R`$\operatorname{card}\big([\![3;10]\!]\big)=$`,c:["8","7","10"],a:0,e:R`$\operatorname{card}\big([\![a;b]\!]\big)=b-a+1=10-3+1=8$.`},
+{t:"den",q:"Nombre de podiums possibles (or, argent, bronze) dans une course de 8 coureurs :",c:[R`$8\times7\times6$`,R`$8^3$`,R`$\binom83$`],a:0,e:R`L'ordre compte, pas de répétition : 3-liste sans répétition, $336$.`},
+{t:"den",q:"Nombre de mains de 5 cartes dans un jeu de 32 cartes :",c:[R`$\binom{32}{5}$`,R`$32^5$`,R`$32\times31\times30\times29\times28$`],a:0,e:R`Une main ne tient pas compte de l'ordre : partie à 5 éléments, $\binom{32}5=201\,376$.`},
+{t:"den",q:"Nombre de façons de ranger 6 livres différents sur une étagère :",c:[R`$6!$`,R`$6^6$`,R`$\binom66$`],a:0,e:R`Permutations des 6 livres : $720$.`},
+{t:"den",q:"Combien de fois y a-t-il plus de bureaux (président, trésorier, secrétaire) que de comités de 3 personnes, parmi 12 personnes ?",c:["6","3","12","1"],a:0,e:R`Chaque comité donne $3!=6$ bureaux en répartissant les rôles : $1320=6\times220$.`},
+{t:"den",q:R`$(1,2)$ et $(2,1)$ sont-elles égales ?`,c:["Non","Oui"],a:0,e:R`Ce sont des listes : $(x_1,\dots,x_p)=(x'_1,\dots,x'_p)$ si et seulement si $x_i=x'_i$ pour tout $i$. Ici $1\neq2$.`},
+{t:"den",q:R`$\{1,2\}$ et $\{2,1\}$ sont-elles égales ?`,c:["Oui","Non"],a:0,e:"Ce sont des ensembles : l'ordre d'écriture ne compte pas."},
+{t:"den",q:R`Combien d'éléments a l'ensemble $\{1,1,2\}$ ?`,c:["2","3","1"],a:0,e:R`$\{1,1,2\}=\{1,2\}$ : un ensemble ne contient pas deux fois le même élément. En revanche, la liste $(1,1,2)$ a 3 termes.`},
+{t:"den",q:R`$(3,3,5)$ est :`,c:[R`une 3-liste de $[\![1;6]\!]$, avec répétition`,R`une 3-combinaison de $[\![1;6]\!]$`,R`une 3-liste sans répétition`],a:0,e:R`Parenthèses : c'est une liste, élément de $[\![1;6]\!]^3$. Le 3 apparaît deux fois : ce n'est pas une liste sans répétition.`},
+{t:"den",q:R`On note $\mathscr P(E)$ l'ensemble des parties de $E$ et $\mathscr P_p(E)$ l'ensemble des parties de $E$ à $p$ éléments. Une $p$-liste de $E$ est un élément de :`,c:[R`$E^p$`,R`$\mathscr P_p(E)$`,R`$\mathscr P(E)$`],a:0,e:R`$E^p=E\times\cdots\times E$ ($p$ facteurs). $\mathscr P_p(E)$ contient les $p$-combinaisons, $\mathscr P(E)$ toutes les parties.`},
+{t:"den",q:R`$A\in\mathscr P_p(E)$ signifie :`,c:[R`$A\subset E$ et $\operatorname{card}(A)=p$`,R`$A\in E$ et $\operatorname{card}(A)=p$`,R`$A\in E^p$`],a:0,e:R`$\mathscr P_p(E)$ est l'ensemble des $p$-combinaisons de $E$, c'est-à-dire des parties de $E$ à $p$ éléments.`},
+{t:"den",q:R`$\mathscr P_2(E)$ désigne l'ensemble des parties de $E$ à 2 éléments. Si $\operatorname{card}(E)=5$, $\operatorname{card}\big(\mathscr P_2(E)\big)=$`,c:["10","20","25","32"],a:0,e:R`$\binom52=10$ parties à 2 éléments.`},
+{t:"den",q:R`$\operatorname{card}(E)=4$. $\operatorname{card}(E^3)=$`,c:["64","12","24","4"],a:0,e:R`$\operatorname{card}(E^p)=\big(\operatorname{card}(E)\big)^p=4^3=64$.`},
+{t:"den",q:R`$\operatorname{card}(A)=3$ et $\operatorname{card}(B)=4$. $\operatorname{card}(A\times B)=$`,c:["12","7","81","64"],a:0,e:R`$\operatorname{card}(A\times B)=\operatorname{card}(A)\operatorname{card}(B)=12$.`},
+{t:"den",q:R`Un élément de $E\times F$ s'écrit :`,c:[R`$(x,y)$ avec $x\in E$ et $y\in F$`,R`$\{x,y\}$ avec $x\in E$ et $y\in F$`,R`$x\times y$`],a:0,e:"Un couple, donc avec des parenthèses : l'ordre compte (le premier terme est dans E, le second dans F)."},
+{t:"den",q:R`$[\![2;5]\!]=$`,c:[R`$\{2,3,4,5\}$`,R`$\{3,4\}$`,R`l'intervalle réel $[2;5]$`],a:0,e:R`$[\![a;b]\!]$ est l'ensemble des entiers de $a$ à $b$, bornes comprises : il a $b-a+1$ éléments.`},
+{t:"den",q:R`$E$ est un ensemble de cardinal $n$ et $p\leqslant n$. Le nombre $\dbinom np$ de $p$-combinaisons de $E$ se lit :`,c:[R`« $p$ parmi $n$ »`,R`« $n$ parmi $p$ »`,R`« $n$ sur $p$ »`],a:0,e:R`C'est le nombre de $p$-combinaisons d'un ensemble à $n$ éléments : on choisit $p$ éléments parmi $n$.`},
+{t:"den",q:R`Nombre de 2-listes sans répétition de $[\![1;5]\!]$ :`,c:["20","10","25","5"],a:0,e:R`$n(n-1)\cdots(n-p+1)$ avec $n=5$, $p=2$ : $5\times4=20$. C'est $2!\times\binom52$.`},
+{t:"den",q:R`On tire simultanément 2 boules parmi 4 boules numérotées de 1 à 4. On note $\mathscr P\big([\![1;4]\!]\big)$ l'ensemble des parties de $[\![1;4]\!]$ et $\mathscr P_2\big([\![1;4]\!]\big)$ l'ensemble des parties de $[\![1;4]\!]$ à 2 éléments. On peut prendre $\Omega=$`,c:[R`$\mathscr P_2\big([\![1;4]\!]\big)$`,R`$[\![1;4]\!]^2$`,R`$\mathscr P\big([\![1;4]\!]\big)$`],a:0,e:R`Un résultat est une 2-combinaison : $\operatorname{card}(\Omega)=\binom42=6$.`},
+{t:"den",q:R`On tire successivement avec remise 2 boules parmi 4 boules numérotées de 1 à 4. On note $\mathscr P_2\big([\![1;4]\!]\big)$ l'ensemble des parties de $[\![1;4]\!]$ à 2 éléments. On peut prendre $\Omega=$`,c:[R`$[\![1;4]\!]^2$`,R`$\mathscr P_2\big([\![1;4]\!]\big)$`,R`$\{1,2,3,4\}$`],a:0,e:R`Un résultat est une 2-liste de $[\![1;4]\!]$ : $\operatorname{card}(\Omega)=4^2=16$.`},
+{t:"den",q:R`On tire successivement sans remise 2 boules parmi 4 boules numérotées. $(3,3)$ est-il un résultat ?`,c:["Non","Oui"],a:0,e:R`Sans remise, une boule ne peut pas sortir deux fois : $\Omega$ est l'ensemble des 2-listes sans répétition de $[\![1;4]\!]$, de cardinal $4\times3=12$.`},
+{t:"den",q:R`$A$ est une partie de $E$, $\operatorname{card}(E)=10$, $\operatorname{card}(A)=4$. $\operatorname{card}(\overline A)=$`,c:["6","14","4"],a:0,e:R`$\operatorname{card}(\overline A)=\operatorname{card}(E)-\operatorname{card}(A)$.`},
+{t:"den",q:R`$\operatorname{card}(B)=7$ et $\operatorname{card}(A\cap B)=3$. $\operatorname{card}(B\setminus A)=$`,c:["4","10","3"],a:0,e:R`$\operatorname{card}(B\setminus A)=\operatorname{card}(B)-\operatorname{card}(A\cap B)=7-3$.`},
+{t:"par",q:R`$E=\{1,2,3,4\}$. $\operatorname{card}\big(\mathscr P(E)\big)=$`,c:["4","8","16","24"],a:2,e:R`$2^4=16$.`},
+{t:"par",q:R`$E=\{1,2,3\}$. Quelle écriture est correcte ?`,c:[R`$1\subset E$`,R`$\{1\}\in E$`,R`$\{1\}\subset E$`,R`$E\in E$`],a:2,e:R`$1\in E$ (élément), $\{1\}\subset E$ (partie), $\{1\}\in\mathscr P(E)$.`},
+{t:"par",q:R`$\varnothing$ est-il une partie de tout ensemble $E$ ?`,c:["Oui","Non"],a:0,e:R`Oui : $\varnothing\subset E$ pour tout ensemble $E$, donc $\varnothing\in\mathscr P(E)$.`},
+{t:"par",q:R`Nombre de parties à 2 éléments de $[\![1;5]\!]$ :`,c:["10","20","25","32"],a:0,e:R`$\binom52=10$.`},
+{t:"par",q:R`$E=\{a,b\}$. $\mathscr P(E)=$`,c:[R`$\{a,b\}$`,R`$\{\{a\},\{b\}\}$`,R`$\{\varnothing,\{a\},\{b\},\{a,b\}\}$`],a:2,e:R`Toutes les parties, y compris $\varnothing$ et $E$ : $2^2=4$.`},
+{t:"par",q:R`$E$ est un ensemble de cardinal $n$. Pourquoi $\operatorname{card}\big(\mathscr P(E)\big)=2^n$ ?`,c:["Pour chaque élément, on choisit « dedans » ou « dehors » : n choix à 2 possibilités","Parce qu'il y a 2 parties par élément","Parce que c'est n au carré"],a:0,e:R`Une partie correspond à une $n$-liste de $\{\text{dedans},\text{dehors}\}$ : $2^n$. On retrouve aussi $\sum_{k=0}^n\binom nk=2^n$.`},
+{t:"par",q:R`Combien de parties a l'ensemble $\{a,b,c\}$ ?`,c:["6","8","9","3"],a:1,e:R`$\varnothing$ ; $\{a\},\{b\},\{c\}$ ; $\{a,b\},\{a,c\},\{b,c\}$ ; $\{a,b,c\}$ : $1+3+3+1=8=2^3$.`},
+{t:"par",q:R`$\operatorname{card}(E)=n$ ; pour $0\leqslant p\leqslant n$, $\mathscr P_p(E)$ désigne l'ensemble des parties de $E$ à $p$ éléments. Pourquoi $\sum_{p=0}^n\binom np=\operatorname{card}\big(\mathscr P(E)\big)$ ?`,c:[R`Les $\mathscr P_p(E)$, pour $0\leqslant p\leqslant n$, forment une partition de $\mathscr P(E)$`,"Par la formule du binôme seulement",R`Parce que $\binom np=2^p$`],a:0,e:R`On classe les parties selon leur nombre d'éléments. Puis la formule du binôme donne $\sum_{p=0}^n\binom np=(1+1)^n=2^n$.`},
+{t:"par",q:R`$E=\{a,b,c\}$ et $\mathscr P_2(E)$ désigne l'ensemble des parties de $E$ à 2 éléments. $\mathscr P_2(E)=$`,c:[R`$\{\{a,b\},\{a,c\},\{b,c\}\}$`,R`$\{(a,b),(a,c),(b,c)\}$`,R`$\{a,b\}$`],a:0,e:R`Ce sont les parties à 2 éléments, écrites avec des accolades : $\binom32=3$.`},
+{t:"par",q:R`$E=\{a,b,c\}$. Vrai ou faux : $\{a\}\in\mathscr P(E)$.`,c:["Vrai","Faux"],a:0,e:R`$\{a\}$ est une partie de $E$, donc un élément de $\mathscr P(E)$.`},
+{t:"par",q:R`« $A\subset B$ » signifie :`,c:[R`tout élément de $A$ est un élément de $B$`,R`au moins un élément de $A$ est dans $B$`,R`$A\cap B\neq\varnothing$`],a:0,e:R`Autrement dit : $\forall x\in A,\ x\in B$.`},
+{t:"par",q:R`Pour démontrer que $A\subset B$, on commence par :`,c:[R`« Soit $x\in A$. Montrons que $x\in B$. »`,R`« Soit $x\in B$. Montrons que $x\in A$. »`,R`« Montrons que $\operatorname{card}(A)\leqslant\operatorname{card}(B)$. »`],a:0,e:R`On part d'un élément quelconque de $A$. L'inégalité des cardinaux est une conséquence de l'inclusion, pas une preuve.`},
+{t:"par",q:R`$A=B$ équivaut à :`,c:[R`$A\subset B$ et $B\subset A$`,R`$\operatorname{card}(A)=\operatorname{card}(B)$`,R`$A\cap B\neq\varnothing$`],a:0,e:R`Double inclusion. Deux ensembles de même cardinal ne sont pas forcément égaux : $\{1\}$ et $\{2\}$.`},
+{t:"par",q:R`$A$ et $B$ sont finis, $A\subset B$ et $\operatorname{card}(A)=\operatorname{card}(B)$. Alors :`,c:[R`$A=B$`,R`$A\neq B$`,"on ne peut rien dire"],a:0,e:R`Proposition du cours : $A\subset B$ et $\operatorname{card}(A)=\operatorname{card}(B)$ si et seulement si $A=B$.`},
+{t:"par",q:R`$A\subset B$, avec $B$ fini. Alors :`,c:[R`$\operatorname{card}(A)\leqslant\operatorname{card}(B)$`,R`$\operatorname{card}(A)\geqslant\operatorname{card}(B)$`,R`$\operatorname{card}(A)=\operatorname{card}(B)$`],a:0,e:"Toute partie d'un ensemble fini est finie, et son cardinal est inférieur ou égal."},
+{t:"par",q:R`$A\subset B$ et $B\subset C$. Alors :`,c:[R`$A\subset C$`,R`$A\in C$`,R`$C\subset A$`],a:0,e:R`Soit $x\in A$ : $x\in B$ car $A\subset B$, puis $x\in C$ car $B\subset C$.`},
+{t:"par",q:R`$A$ et $B$ sont des parties de $E$. Les ensembles $A\cap B$, $A\cup B$ et $\overline A$ sont :`,c:[R`des parties de $E$, donc des éléments de $\mathscr P(E)$`,R`des éléments de $E$`,R`des parties de $\mathscr P(E)$`],a:0,e:R`Leurs éléments sont des éléments de $E$ : ce sont des parties de $E$.`},
+{t:"par",q:R`Laquelle de ces écritures est une partie de $\{1,2,3\}$ ?`,c:[R`$\{1,3\}$`,R`$\{1,4\}$`,R`$(1,3)$`,"2"],a:0,e:R`$\{1,4\}$ contient 4, qui n'est pas dans l'ensemble. $(1,3)$ est une liste, et $2$ est un élément.`},
+{t:"par",q:R`$E=\{1,2,3\}$. Vrai ou faux : $E\in\mathscr P(E)$.`,c:["Vrai","Faux"],a:0,e:R`$E\subset E$, donc $E$ est une partie de lui-même : $E\in\mathscr P(E)$.`},
+{t:"par",q:R`$\operatorname{card}\big(\mathscr P(\varnothing)\big)=$`,c:["1","0"],a:0,e:R`$\mathscr P(\varnothing)=\{\varnothing\}$ : la seule partie de $\varnothing$ est $\varnothing$. On retrouve $2^0=1$.`},
+{t:"par",q:R`$\varnothing$ et $\{\varnothing\}$ :`,c:["sont différents","sont égaux"],a:0,e:R`$\varnothing$ n'a aucun élément ; $\{\varnothing\}$ en a un, qui est $\varnothing$.`},
+{t:"par",q:R`Nombre de parties non vides de $[\![1;5]\!]$ :`,c:["31","32","5","25"],a:0,e:R`$2^5$ parties en tout, moins la partie vide : $32-1=31$.`},
+{t:"par",q:R`Nombre de parties de $[\![1;5]\!]$ qui contiennent 1 :`,c:["16","32","5","10"],a:0,e:R`On ajoute 1 à une partie quelconque de $\{2,3,4,5\}$ : $2^4=16$. C'est la moitié des $2^5$ parties.`},
+{t:"par",q:R`Nombre de parties de $\{a,b,c,d\}$ ayant au plus un élément :`,c:["5","4","2","1"],a:0,e:R`$\varnothing$ et les 4 singletons : $\binom40+\binom41=5$.`},
+{t:"par",q:R`$E=\{1,2,3\}$. Combien de parties à 2 éléments contiennent 1 ?`,c:["2","3","1"],a:0,e:R`$\{1,2\}$ et $\{1,3\}$ : on choisit l'autre élément parmi 2, soit $\binom21=2$.`},
+{t:"par",q:R`$E=\{e_1,e_2,e_3\}$. Dans la bijection entre $\mathscr P(E)$ et $\{0;1\}^3$ du cours, quelle partie correspond à $(1,0,1)$ ?`,c:[R`$\{e_1,e_3\}$`,R`$\{e_2\}$`,R`$(e_1,e_3)$`],a:0,e:R`$x_i=1$ si $e_i$ est dans la partie, $0$ sinon : $e_1$ et $e_3$ y sont, pas $e_2$.`},
+{t:"indic",q:R`$E=[\![1;6]\!]$ et $A=\{2,4,6\}$. $\mathbf 1_A(4)=$`,c:["1","0","4"],a:0,e:R`$4\in A$, donc $\mathbf 1_A(4)=1$.`},
+{t:"indic",q:R`$E=[\![1;6]\!]$ et $A=\{2,4,6\}$. $\mathbf 1_A(3)=$`,c:["0","1","3"],a:0,e:R`$3\notin A$, donc $\mathbf 1_A(3)=0$. Une indicatrice ne prend que les valeurs 0 et 1.`},
+{t:"indic",q:R`$\mathbf 1_A(x)=1$ équivaut à :`,c:[R`$x\in A$`,R`$x\notin A$`,R`$x=A$`],a:0,e:R`Propriété ① du cours : $\forall x\in E,\ \mathbf 1_A(x)=1\iff x\in A$.`},
+{t:"indic",q:R`$\mathbf 1_{A\cap B}=$`,c:[R`$\mathbf 1_A\times\mathbf 1_B$`,R`$\mathbf 1_A+\mathbf 1_B$`,R`$\mathbf 1_A-\mathbf 1_B$`],a:0,e:R`Le produit vaut 1 si et seulement si les deux valent 1, c'est-à-dire si $x\in A$ et $x\in B$.`},
+{t:"indic",q:R`$\mathbf 1_{\overline A}=$`,c:[R`$1-\mathbf 1_A$`,R`$-\mathbf 1_A$`,R`$\dfrac1{\mathbf 1_A}$`],a:0,e:R`Si $x\in A$ : $1-1=0$ ; si $x\notin A$ : $1-0=1$.`},
+{t:"indic",q:R`$\mathbf 1_A\leqslant\mathbf 1_B$ équivaut à :`,c:[R`$A\subset B$`,R`$B\subset A$`,R`$A\cap B=\varnothing$`],a:0,e:R`Si $x\in A$, alors $1=\mathbf 1_A(x)\leqslant\mathbf 1_B(x)$, donc $\mathbf 1_B(x)=1$ et $x\in B$.`},
+{t:"indic",q:R`$\mathbf 1_A=\mathbf 1_B$ équivaut à :`,c:[R`$A=B$`,R`$\operatorname{card}(A)=\operatorname{card}(B)$`,R`$A\cap B\neq\varnothing$`],a:0,e:"Une partie est entièrement déterminée par sa fonction indicatrice."},
+{t:"indic",q:R`$\mathbf 1_\varnothing$ et $\mathbf 1_E$ sont :`,c:["les applications constantes égales à 0 et à 1","les applications constantes égales à 1 et à 0","non définies"],a:0,e:R`Aucun $x$ n'est dans $\varnothing$, tous les $x$ sont dans $E$.`},
+{t:"indic",q:R`$(\mathbf 1_A)^2=$`,c:[R`$\mathbf 1_A$`,R`$2\,\mathbf 1_A$`,"1"],a:0,e:R`$0^2=0$ et $1^2=1$. C'est aussi $\mathbf 1_{A\cap A}=\mathbf 1_A\times\mathbf 1_A$.`},
+{t:"indic",q:R`$\mathbf 1_{A\cup B}=$`,c:[R`$\mathbf 1_A+\mathbf 1_B-\mathbf 1_A\mathbf 1_B$`,R`$\mathbf 1_A+\mathbf 1_B$`,R`$\mathbf 1_A\mathbf 1_B$`],a:0,e:R`$\overline{A\cup B}=\overline A\cap\overline B$, donc $\mathbf 1_{A\cup B}=1-(1-\mathbf 1_A)(1-\mathbf 1_B)=\mathbf 1_A+\mathbf 1_B-\mathbf 1_A\mathbf 1_B$.`},
+{t:"indic",q:R`$A\cap B=\varnothing$. Alors $\mathbf 1_{A\cup B}=$`,c:[R`$\mathbf 1_A+\mathbf 1_B$`,R`$\mathbf 1_A\mathbf 1_B$`,"1"],a:0,e:R`$\mathbf 1_A\mathbf 1_B=\mathbf 1_{A\cap B}=\mathbf 1_\varnothing=0$.`},
+{t:"indic",q:R`$\mathbf 1_{A\cap B}(x)=1$ équivaut à :`,c:[R`$x\in A$ et $x\in B$`,R`$x\in A$ ou $x\in B$`,R`$x\in A$ et $x\notin B$`],a:0,e:R`$\mathbf 1_A(x)\,\mathbf 1_B(x)=1$ si et seulement si les deux facteurs valent 1.`},
+{t:"indic",q:R`$E$ est fini et $A\subset E$. $\operatorname{card}(A)=$`,c:[R`$\sum_{x\in E}\mathbf 1_A(x)$`,R`$\prod_{x\in E}\mathbf 1_A(x)$`,R`$\mathbf 1_A\big(\operatorname{card}(E)\big)$`],a:0,e:R`Chaque $x$ de $A$ compte pour 1, chaque $x$ hors de $A$ pour 0.`},
+{t:"indic",q:R`$\sum_{x\in A}\mathbf 1_B(x)=$`,c:[R`$\operatorname{card}(A\cap B)$`,R`$\operatorname{card}(A\cup B)$`,R`$\operatorname{card}(B)$`],a:0,e:R`On compte les éléments de $A$ qui sont aussi dans $B$.`},
+{t:"indic",q:R`$\sum_{k=1}^{20}\mathbf 1_{3\text{ divise }k}=$`,c:["6","7","3","20"],a:0,e:R`$\sum_{x\in E}\mathbf 1_{P(x)}=\operatorname{card}\big(\{x\in E\mid P(x)\}\big)$ : les multiples de 3 entre 1 et 20 sont $3,6,9,12,15,18$.`},
+{t:"indic",q:R`$\sum_{i=1}^n\sum_{j=1}^n\mathbf 1_{j\leqslant i}=$`,c:[R`$\dfrac{n(n+1)}2$`,R`$n^2$`,R`$n$`],a:0,e:R`Pour $i$ fixé, $\sum_{j=1}^n\mathbf 1_{j\leqslant i}=i$. Puis $\sum_{i=1}^n i=\frac{n(n+1)}2$.`},
+{t:"indic",q:R`$A$ est un événement. $\mathbb E(\mathbf 1_A)=$`,c:[R`$\mathbb P(A)$`,"1",R`$\operatorname{card}(A)$`],a:0,e:R`$\mathbf 1_A\hookrightarrow\mathcal B\big(\mathbb P(A)\big)$ : $\mathbb E(\mathbf 1_A)=0\times\mathbb P(\overline A)+1\times\mathbb P(A)$.`},
+{t:"indic",q:R`$A$ est un événement. $V(\mathbf 1_A)=$`,c:[R`$\mathbb P(A)\big(1-\mathbb P(A)\big)$`,R`$\mathbb P(A)$`,R`$\mathbb P(A)^2$`],a:0,e:R`Variance d'une loi de Bernoulli de paramètre $p=\mathbb P(A)$.`},
+{t:"indic",q:R`On lance un dé équilibré ; $X=\mathbf 1_{[\text{résultat}\geqslant5]}$. Loi de $X$ :`,c:[R`$\mathcal B\big(\frac13\big)$`,R`$\mathcal B\big(\frac12\big)$`,R`$\mathcal U(\{0,1\})$`],a:0,e:R`$X=1$ si le résultat est 5 ou 6 : $\mathbb P([X=1])=\frac26=\frac13$.`},
+{t:"indic",q:R`$A_1,\dots,A_n$ sont des événements et $N=\sum_{k=1}^n\mathbf 1_{A_k}$. Que représente $N$ ?`,c:[R`le nombre d'événements $A_k$ réalisés`,R`la probabilité que l'un des $A_k$ soit réalisé`,R`le nombre de résultats de $\Omega$`],a:0,e:R`Pour un résultat $\omega$, chaque $A_k$ réalisé ajoute 1. Par linéarité : $\mathbb E(N)=\sum_{k=1}^n\mathbb P(A_k)$.`},
+{t:"union",q:R`Dire que $(A_1,\dots,A_n)$ est un système complet d'événements signifie :`,c:[R`$\bigcup_{k=1}^n A_k=\Omega$ et $\forall (i,j)\in[\![1;n]\!]^2,\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$`,R`$\bigcup_{k=1}^n A_k=\Omega$ seulement`,R`$\forall (i,j)\in[\![1;n]\!]^2,\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$ seulement`],a:0,e:"Il faut les deux conditions : les A_k recouvrent Ω, et ils ne se chevauchent pas."},
+{t:"union",q:R`On lance un dé : $\Omega=[\![1;6]\!]$. $\big(\{1,2\},\{3,4\},\{5,6\}\big)$ est-il un système complet d'événements ?`,c:["Oui","Non"],a:0,e:R`Leur réunion est $\Omega$ et leurs intersections deux à deux sont vides.`},
+{t:"union",q:R`On lance un dé : $\Omega=[\![1;6]\!]$. $\big(\{1,2,3\},\{3,4,5,6\}\big)$ est-il un système complet d'événements ?`,c:["Non","Oui"],a:0,e:R`$\{1,2,3\}\cap\{3,4,5,6\}=\{3\}\neq\varnothing$.`},
+{t:"union",q:R`On lance un dé : $\Omega=[\![1;6]\!]$. $\big(\{1,2\},\{4,5,6\}\big)$ est-il un système complet d'événements ?`,c:["Non","Oui"],a:0,e:R`Leur réunion est $\{1,2,4,5,6\}\neq\Omega$ : le résultat 3 ne réalise aucun des deux.`},
+{t:"union",q:R`On lance deux fois une pièce. $A$ : « le premier lancer donne Pile », $B$ : « le deuxième lancer donne Pile ». $(A,B)$ est-il un système complet d'événements ?`,c:["Non","Oui"],a:0,e:R`$A\cap B=\{PP\}\neq\varnothing$, et $FF$ ne réalise ni $A$ ni $B$.`},
+{t:"union",q:R`On lance trois fois une pièce ; $B_k$ : « obtenir exactement $k$ Pile », pour $k\in[\![0;3]\!]$. $(B_0,B_1,B_2,B_3)$ est-il un système complet d'événements ?`,c:["Oui","Non"],a:0,e:R`Chaque résultat a un nombre de Pile entre 0 et 3, et un seul.`},
+{t:"union",q:R`$(A_1,A_2,A_3)$ est un système complet d'événements, $\mathbb P(A_1)=0{,}2$ et $\mathbb P(A_2)=0{,}5$. $\mathbb P(A_3)=$`,c:["0,3","0,7","on ne peut pas savoir"],a:0,e:R`$\mathbb P(A_1)+\mathbb P(A_2)+\mathbb P(A_3)=1$.`},
+{t:"union",q:R`Pourquoi a-t-on $\mathbb P(\overline A)=1-\mathbb P(A)$ ?`,c:[R`$(A,\overline A)$ est un système complet, donc $\mathbb P(A)+\mathbb P(\overline A)=1$`,R`$A$ et $\overline A$ sont indépendants`,"c'est une définition"],a:0,e:R`$A\cup\overline A=\Omega$ et $A\cap\overline A=\varnothing$.`},
+{t:"union",q:R`Si $\forall (i,j)\in[\![1;n]\!]^2,\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$, alors $\mathbb P\Big(\bigcup_{i=1}^n A_i\Big)=$`,c:[R`$\sum_{i=1}^n\mathbb P(A_i)$`,R`$\prod_{i=1}^n\mathbb P(A_i)$`,"1"],a:0,e:"Théorème du cours : la probabilité d'une réunion disjointe est la somme des probabilités."},
+{t:"union",q:R`Si $\forall (i,j)\in[\![1;n]\!]^2,\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$, la formule donnant $\mathbb P\Big(\bigcup_{i=1}^n A_i\Big)$ fait apparaître :`,c:["une somme","un produit"],a:0,e:R`$\mathbb P\Big(\bigcup A_i\Big)=\sum\mathbb P(A_i)$. Un produit apparaît pour une intersection d'événements indépendants.`},
+{t:"union",q:R`On lance un dé équilibré. $\mathbb P(\text{« obtenir 1 ou 6 »})=$`,c:[R`$\frac13$`,R`$\frac16$`,R`$\frac1{36}$`],a:0,e:R`$\{1\}$ et $\{6\}$ sont disjoints : $\frac16+\frac16=\frac13$.`},
+{t:"union",q:R`Pour écrire $\mathbb P(A\cup B)=\mathbb P(A)+\mathbb P(B)$, il faut :`,c:[R`$A\cap B=\varnothing$`,R`$A$ et $B$ indépendants`,R`$\mathbb P(A)+\mathbb P(B)\leqslant1$`],a:0,e:R`Sinon, il faut retirer $\mathbb P(A\cap B)$ (formule du crible).`},
+{t:"union",q:R`Formule du crible à l'ordre 2 : $\mathbb P(A\cup B)=$`,c:[R`$\mathbb P(A)+\mathbb P(B)-\mathbb P(A\cap B)$`,R`$\mathbb P(A)+\mathbb P(B)$`,R`$\mathbb P(A)+\mathbb P(B)+\mathbb P(A\cap B)$`],a:0,e:R`$\mathbb P(A\cap B)$ est comptée deux fois dans $\mathbb P(A)+\mathbb P(B)$ : on la retire une fois.`},
+{t:"union",q:R`$\mathbb P(A)=0{,}5$, $\mathbb P(B)=0{,}4$, $\mathbb P(A\cap B)=0{,}2$. $\mathbb P(A\cup B)=$`,c:["0,7","0,9","1,1","0,2"],a:0,e:R`$0{,}5+0{,}4-0{,}2=0{,}7$.`},
+{t:"union",q:R`On lance deux dés équilibrés. $A$ : « le premier dé donne 6 », $B$ : « le deuxième dé donne 6 ». $\mathbb P(A\cup B)=$`,c:[R`$\frac{11}{36}$`,R`$\frac13$`,R`$\frac1{36}$`],a:0,e:R`Crible : $\frac16+\frac16-\frac1{36}=\frac{11}{36}$. $\frac13$ oublie que $(6,6)$ est compté deux fois.`},
+{t:"union",q:R`Formule du crible à l'ordre 3 : $\mathbb P(A\cup B\cup C)=$`,c:[R`$\mathbb P(A)+\mathbb P(B)+\mathbb P(C)-\mathbb P(A\cap B)-\mathbb P(A\cap C)-\mathbb P(B\cap C)+\mathbb P(A\cap B\cap C)$`,R`$\mathbb P(A)+\mathbb P(B)+\mathbb P(C)-\mathbb P(A\cap B)-\mathbb P(A\cap C)-\mathbb P(B\cap C)-\mathbb P(A\cap B\cap C)$`,R`$\mathbb P(A)+\mathbb P(B)+\mathbb P(C)-\mathbb P(A\cap B\cap C)$`],a:0,e:"Les signes alternent : + pour les événements seuls, − pour les intersections de deux, + pour l'intersection des trois."},
+{t:"union",q:R`$\mathbb P(A)=\mathbb P(B)=\mathbb P(C)=0{,}5$ ; $\mathbb P(A\cap B)=\mathbb P(A\cap C)=\mathbb P(B\cap C)=0{,}25$ ; $\mathbb P(A\cap B\cap C)=0{,}25$. $\mathbb P(A\cup B\cup C)=$`,c:["1","0,75","1,25","0,5"],a:0,e:R`$1{,}5-0{,}75+0{,}25=1$. (C'est l'exemple du cours : deux lancers, « le premier lancer donne Pile », « le deuxième lancer donne Pile », « les deux lancers donnent le même résultat ».)`},
+{t:"union",q:"Dans une classe de 30 élèves, 18 étudient l'anglais, 12 l'espagnol, et 5 les deux. Combien étudient au moins l'une des deux langues ?",c:["25","30","35"],a:0,e:R`Crible pour les cardinaux : $18+12-5=25$.`},
+{t:"union",q:R`$\operatorname{card}(A)=10$, $\operatorname{card}(B)=8$, $\operatorname{card}(C)=6$, $\operatorname{card}(A\cap B)=3$, $\operatorname{card}(A\cap C)=2$, $\operatorname{card}(B\cap C)=2$, $\operatorname{card}(A\cap B\cap C)=1$. $\operatorname{card}(A\cup B\cup C)=$`,c:["18","17","24","16"],a:0,e:R`$10+8+6-3-2-2+1=18$.`},
+{t:"union",q:R`Pour tous événements $A$ et $B$ : $\mathbb P(A\cup B)\leqslant\mathbb P(A)+\mathbb P(B)$ est vrai :`,c:["toujours","seulement si A et B sont indépendants","seulement si A et B sont incompatibles"],a:0,e:R`Par le crible, $\mathbb P(A\cup B)=\mathbb P(A)+\mathbb P(B)-\mathbb P(A\cap B)$ et $\mathbb P(A\cap B)\geqslant0$. L'égalité a lieu pour des événements incompatibles.`},
+{t:"ind",q:R`$A$ et $B$ incompatibles signifie :`,c:[R`$A\cap B=\varnothing$`,R`$\mathbb P(A\cap B)=\mathbb P(A)\mathbb P(B)$`,R`$\mathbb P(A\cup B)=1$`],a:0,e:"C'est une propriété des ensembles, sans calcul de probabilité."},
+{t:"ind",q:R`$A$ et $B$ indépendants signifie :`,c:[R`$A\cap B=\varnothing$`,R`$\mathbb P(A\cap B)=\mathbb P(A)\mathbb P(B)$`,R`$\mathbb P(A)+\mathbb P(B)=1$`],a:1,e:"C'est une propriété de la probabilité : il faut calculer."},
+{t:"ind",q:R`$\mathbb P(A)=0{,}3$, $\mathbb P(B)=0{,}5$, $A$ et $B$ incompatibles. $\mathbb P(A\cup B)=$`,c:["0,8","0,65","0,15"],a:0,e:R`Incompatibles : $\mathbb P(A\cup B)=\mathbb P(A)+\mathbb P(B)=0{,}8$.`},
+{t:"ind",q:R`$\mathbb P(A)=0{,}3$, $\mathbb P(B)=0{,}5$, $A$ et $B$ indépendants. $\mathbb P(A\cap B)=$`,c:["0,15","0","0,8"],a:0,e:R`Indépendants : $\mathbb P(A\cap B)=0{,}3\times0{,}5=0{,}15$.`},
+{t:"ind",q:R`$\mathbb P(A)=0{,}3$, $\mathbb P(B)=0{,}5$, $A$ et $B$ indépendants. $\mathbb P(A\cup B)=$`,c:["0,8","0,65","0,15"],a:1,e:R`$\mathbb P(A\cup B)=\mathbb P(A)+\mathbb P(B)-\mathbb P(A\cap B)=0{,}8-0{,}15=0{,}65$.`},
+{t:"ind",q:R`$\mathbb P(A)>0$, $\mathbb P(B)>0$, et $A$, $B$ incompatibles. Alors $A$ et $B$ :`,c:["sont indépendants","ne sont pas indépendants","on ne peut pas savoir"],a:1,e:R`$\mathbb P(A\cap B)=0$ alors que $\mathbb P(A)\mathbb P(B)>0$.`},
+{t:"ind",q:R`Urne de 2 rouges et 3 blanches, deux tirages sans remise. $R_1$ : « la première boule tirée est rouge », $R_2$ : « la deuxième boule tirée est rouge ».`,c:["incompatibles","indépendants","ni l'un ni l'autre"],a:2,e:R`$R_1\cap R_2\neq\varnothing$, et $\mathbb P_{R_1}(R_2)=\frac14\neq\mathbb P(R_2)=\frac25$.`},
+{t:"ind",q:R`Dé équilibré. $A$ : « le résultat est pair », $B$ : « le résultat est inférieur ou égal à 2 ».`,c:["incompatibles","indépendants","ni l'un ni l'autre"],a:1,e:R`$\mathbb P(A\cap B)=\mathbb P(\{2\})=\frac16=\frac12\times\frac13$.`},
+{t:"ind",q:R`Dé équilibré. $A$ : « le résultat est pair », $B$ : « le résultat est impair ».`,c:["incompatibles","indépendants","ni l'un ni l'autre"],a:0,e:R`$A\cap B=\varnothing$. Ils ne sont pas indépendants : $0\neq\frac12\times\frac12$.`},
+{t:"ind",q:R`Dé équilibré. $A$ : « le résultat est pair », $D$ : « le résultat est inférieur ou égal à 3 ».`,c:["incompatibles","indépendants","ni l'un ni l'autre"],a:2,e:R`$A\cap D=\{2\}\neq\varnothing$ et $\mathbb P(A\cap D)=\frac16\neq\frac12\times\frac12$.`},
+{t:"ind",q:R`$A$ et $B$ sont indépendants. Alors $A$ et $\overline B$ :`,c:["sont indépendants","sont incompatibles","on ne peut pas savoir"],a:0,e:R`Proposition du cours : $\mathbb P(A\cap\overline B)=\mathbb P(A)-\mathbb P(A)\mathbb P(B)=\mathbb P(A)\,\mathbb P(\overline B)$.`},
+{t:"ind",q:"Mutuellement indépendants et deux à deux indépendants :",c:["mutuellement entraîne 2 à 2, la réciproque est fausse","c'est la même chose","2 à 2 entraîne mutuellement"],a:0,e:R`Contre-exemple du cours : deux lancers, $A$ « le premier lancer donne Pile », $B$ « le deuxième lancer donne Pile », $C$ « les deux lancers donnent le même résultat ».`},
+{t:"ind",q:R`Deux lancers d'une pièce équilibrée. $A$ : « le premier lancer donne Pile », $B$ : « le deuxième lancer donne Pile », $C$ : « les deux lancers donnent le même résultat ». $\mathbb P(A\cap B\cap C)=$`,c:[R`$\frac14$`,R`$\frac18$`,R`$\frac12$`],a:0,e:R`$A\cap B\cap C=\{PP\}$ : $\frac14\neq\frac18=\mathbb P(A)\mathbb P(B)\mathbb P(C)$. Ils sont 2 à 2 indépendants mais pas mutuellement indépendants.`},
+{t:"ind",q:R`Définition : $A_1,\dots,A_n$ sont mutuellement indépendants si :`,c:[R`pour toute partie $J$ de $[\![1;n]\!]$, $\mathbb P\big(\bigcap_{j\in J}A_j\big)=\prod_{j\in J}\mathbb P(A_j)$`,R`$\mathbb P(A_1\cap\dots\cap A_n)=\mathbb P(A_1)\cdots\mathbb P(A_n)$ seulement`,R`ils sont deux à deux indépendants`],a:0,e:"La condition doit être vraie pour toutes les sous-familles, pas seulement pour la famille entière."},
+{t:"ind",q:R`Deux lancers d'une pièce. $A$ : « le premier lancer donne Pile », $B$ : « le deuxième lancer donne Pile ».`,c:["incompatibles","indépendants","ni l'un ni l'autre"],a:1,e:R`Les lancers sont indépendants. Ils ne sont pas incompatibles : $(P,P)$ est possible.`},
+{t:"cond",q:R`À quelle condition peut-on écrire $\mathbb P_A(B)$ ?`,c:[R`$\mathbb P(A)\neq0$`,R`$\mathbb P(B)\neq0$`,R`$A$ et $B$ indépendants`],a:0,e:R`On divise par $\mathbb P(A)$ : $\mathbb P_A(B)=\dfrac{\mathbb P(A\cap B)}{\mathbb P(A)}$.`},
+{t:"cond",q:R`On note aussi $\mathbb P_A(B)=\mathbb P(B\,|\,A)$. « $B\,|\,A$ » est-il un événement ?`,c:["Non","Oui"],a:0,e:R`C'est seulement une notation : on conditionne par $A$, la probabilité change ($\mathbb P_A$), l'événement reste $B$.`},
+{t:"cond",q:R`$\mathbb P(A)\neq0$. $\mathbb P_A(A)=$`,c:["1",R`$\mathbb P(A)$`,"0"],a:0,e:R`$\mathbb P_A(A)=\dfrac{\mathbb P(A\cap A)}{\mathbb P(A)}=1$.`},
+{t:"cond",q:R`En situation d'équiprobabilité, $\mathbb P_A(B)=$`,c:[R`$\dfrac{\operatorname{card}(A\cap B)}{\operatorname{card}(A)}$`,R`$\dfrac{\operatorname{card}(A\cap B)}{\operatorname{card}(\Omega)}$`,R`$\dfrac{\operatorname{card}(B)}{\operatorname{card}(A)}$`],a:0,e:R`Tout se passe comme si l'univers devenait $A$.`},
+{t:"cond",q:R`$\mathbb P(A)=0{,}4$ et $\mathbb P(A\cap B)=0{,}1$. $\mathbb P_A(B)=$`,c:["0,25","0,04","0,1","0,4"],a:0,e:R`$\mathbb P_A(B)=\dfrac{0{,}1}{0{,}4}=0{,}25$.`},
+{t:"cond",q:R`$\mathbb P_A(B)=0{,}3$. $\mathbb P_A(\overline B)=$`,c:["0,7","0,3","on ne peut pas savoir"],a:0,e:R`$\mathbb P_A$ est une probabilité : $\mathbb P_A(\overline B)=1-\mathbb P_A(B)=0{,}7$.`},
+{t:"cond",q:R`$\mathbb P_A(B)=0{,}3$. $\mathbb P_{\overline A}(B)=$`,c:["on ne peut pas savoir","0,7","0,3"],a:0,e:R`On conditionne par un autre événement : $\mathbb P_A$ et $\mathbb P_{\overline A}$ sont deux probabilités différentes. Seul $\mathbb P_A(\overline B)$ vaut $0{,}7$.`},
+{t:"cond",q:R`En général, $\mathbb P_A(B)$ et $\mathbb P_B(A)$ :`,c:["sont différents","sont égaux","ont pour somme 1"],a:0,e:R`$\mathbb P_A(B)=\dfrac{\mathbb P(A\cap B)}{\mathbb P(A)}$ et $\mathbb P_B(A)=\dfrac{\mathbb P(A\cap B)}{\mathbb P(B)}$ : les dénominateurs diffèrent. Exemple du dépistage ($M$ : « l'individu est malade », $T$ : « le test est positif ») : $\mathbb P_M(T)=0{,}99$ mais $\mathbb P_T(M)=\frac13$.`},
+{t:"cond",q:R`$A$ et $B$ sont indépendants, avec $\mathbb P(A)\neq0$. $\mathbb P_A(B)=$`,c:[R`$\mathbb P(B)$`,R`$\mathbb P(A)$`,R`$\mathbb P(A)\mathbb P(B)$`,"0"],a:0,e:R`$\mathbb P_A(B)=\dfrac{\mathbb P(A)\mathbb P(B)}{\mathbb P(A)}=\mathbb P(B)$ : savoir que $A$ est réalisé ne change rien pour $B$.`},
+{t:"cond",q:R`On lance un dé équilibré. Sachant que le résultat est pair, quelle est la probabilité d'avoir obtenu 6 ?`,c:[R`$\frac13$`,R`$\frac16$`,R`$\frac12$`],a:0,e:R`$\mathbb P_{\text{pair}}(\{6\})=\dfrac{\mathbb P(\{6\})}{\mathbb P(\{2,4,6\})}=\dfrac{1/6}{1/2}=\dfrac13$.`},
+{t:"cond",q:R`On lance deux dés équilibrés. Sachant que la somme vaut 8, quelle est la probabilité que le premier dé donne 6 ?`,c:[R`$\frac15$`,R`$\frac16$`,R`$\frac1{36}$`,R`$\frac5{36}$`],a:0,e:R`La somme vaut 8 pour 5 résultats équiprobables : $(2,6),(3,5),(4,4),(5,3),(6,2)$. Un seul commence par 6 : $\frac{1/36}{5/36}=\frac15$.`},
+{t:"cond",q:R`Urne de 3 rouges et 2 blanches, deux tirages successifs sans remise ; $R_k$ : « la $k$-ième boule tirée est rouge ». $\mathbb P_{R_1}(R_2)=$`,c:[R`$\frac12$`,R`$\frac25$`,R`$\frac35$`,R`$\frac3{10}$`],a:0,e:R`Après une rouge, il reste 2 rouges sur 4 boules : $\frac24=\frac12$.`},
+{t:"cond",q:R`Urne de 3 rouges et 2 blanches, tirages successifs sans remise ; $R_k$ : « la $k$-ième boule tirée est rouge ». $\mathbb P(R_1\cap R_2)=$`,c:[R`$\frac3{10}$`,R`$\frac9{25}$`,R`$\frac35$`,R`$\frac12$`],a:0,e:R`Probabilités composées : $\mathbb P(R_1)\,\mathbb P_{R_1}(R_2)=\frac35\times\frac24=\frac3{10}$. ($\frac9{25}$ serait le résultat avec remise.)`},
+{t:"cond",q:R`Urne de 3 rouges et 2 blanches, trois tirages successifs sans remise. Probabilité d'obtenir trois rouges :`,c:[R`$\frac1{10}$`,R`$\frac{27}{125}$`,R`$\frac35$`,R`$\frac3{10}$`],a:0,e:R`$\mathbb P(R_1)\,\mathbb P_{R_1}(R_2)\,\mathbb P_{R_1\cap R_2}(R_3)=\frac35\times\frac24\times\frac13=\frac1{10}$.`},
+{t:"cond",q:R`Formule des probabilités composées pour $\mathbb P(A\cap B\cap C)$ (avec $\mathbb P(A\cap B)\neq0$) :`,c:[R`$\mathbb P(A)\,\mathbb P_A(B)\,\mathbb P_{A\cap B}(C)$`,R`$\mathbb P(A)\,\mathbb P(B)\,\mathbb P(C)$`,R`$\mathbb P_A(B)\,\mathbb P_B(C)$`],a:0,e:R`$\mathbb P(A)\mathbb P(B)\mathbb P(C)$ n'est vrai que si $A$, $B$, $C$ sont mutuellement indépendants.`},
+{t:"cond",q:"Dans un arbre de probabilités, le nombre écrit sur la branche qui va de A vers B est :",c:[R`$\mathbb P_A(B)$`,R`$\mathbb P(A\cap B)$`,R`$\mathbb P(B)$`],a:0,e:R`On obtient $\mathbb P(A\cap B)$ en multipliant le long du chemin : $\mathbb P(A)\times\mathbb P_A(B)$.`},
+{t:"cond",q:"70 % des élèves d'un lycée sont demi-pensionnaires et, parmi eux, 40 % font du sport à l'AS. Probabilité qu'un élève pris au hasard soit demi-pensionnaire et fasse du sport à l'AS :",c:["0,28","0,4","0,7","1,1"],a:0,e:R`« Parmi eux, 40 % » est une probabilité conditionnelle : $\mathbb P(D\cap S)=\mathbb P(D)\,\mathbb P_D(S)=0{,}7\times0{,}4=0{,}28$.`},
+{t:"fpt",q:R`Pour écrire $\mathbb P(B)=\sum_{i=1}^n\mathbb P(A_i)\,\mathbb P_{A_i}(B)$, il faut que $(A_1,\dots,A_n)$ soit :`,c:["un système complet d'événements non négligeables","deux à deux indépendants","un système complet, sans autre condition"],a:0,e:R`C'est la version ② du cours : il faut $\mathbb P(A_i)\neq0$ pour que les $\mathbb P_{A_i}$ soient définies.`},
+{t:"fpt",q:R`$(A_1,\dots,A_n)$ est un système complet d'événements, sans autre hypothèse. Pour tout événement $B$ :`,c:[R`$\mathbb P(B)=\sum_{i=1}^n\mathbb P(A_i\cap B)$`,R`$\mathbb P(B)=\sum_{i=1}^n\mathbb P(A_i)\,\mathbb P_{A_i}(B)$`,R`$\mathbb P(B)=\sum_{i=1}^n\mathbb P_{A_i}(B)$`],a:0,e:R`Version ① du cours : $B=\bigcup_{i}(A_i\cap B)$, réunion disjointe. Elle ne demande pas $\mathbb P(A_i)\neq0$.`},
+{t:"fpt",q:R`Un système complet contient un événement $A_k$ avec $\mathbb P(A_k)=0$. Peut-on utiliser une formule des probabilités totales ?`,c:[R`Oui, la version $\mathbb P(B)=\sum\mathbb P(A_i\cap B)$`,"Non, jamais",R`Oui, la version avec les $\mathbb P_{A_i}(B)$, telle quelle`],a:0,e:R`$\mathbb P_{A_k}$ n'est pas définie. La version ① marche toujours (ou bien on convient que $\mathbb P(A_k)\mathbb P_{A_k}(B)=0$).`},
+{t:"fpt",q:R`Dire que $A$ est négligeable pour $\mathbb P$ signifie :`,c:[R`$\mathbb P(A)=0$`,R`$A=\varnothing$`,R`$\mathbb P(A)$ est petite`],a:0,e:R`Un événement négligeable n'est pas forcément vide. Un système complet « non négligeable » : tous les $\mathbb P(A_i)\neq0$.`},
+{t:"fpt",q:R`$(A_1,\dots,A_n)$ est un système complet d'événements. $\sum_{i=1}^n\mathbb P(A_i)=$`,c:["1","n","0"],a:0,e:R`$\bigcup_{i=1}^n A_i=\Omega$ et $\forall (i,j)\in[\![1;n]\!]^2,\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$, donc $\sum_{i=1}^n\mathbb P(A_i)=\mathbb P(\Omega)=1$.`},
+{t:"fpt",q:R`Pour la formule de Bayes $\mathbb P_B(A_j)=\dfrac{\mathbb P(A_j)\mathbb P_{A_j}(B)}{\sum_i\mathbb P(A_i)\mathbb P_{A_i}(B)}$, il faut :`,c:[R`un système complet non négligeable, et $B$ non négligeable`,R`seulement $\mathbb P(B)\neq0$`,R`$A_j$ et $B$ indépendants`],a:0,e:R`$\mathbb P(A_i)\neq0$ pour définir les $\mathbb P_{A_i}$, et $\mathbb P(B)\neq0$ pour définir $\mathbb P_B$.`},
+{t:"fpt",q:R`$(A,\overline A)$ est un système complet d'événements :`,c:["toujours","seulement si A est indépendant de B",R`seulement si $\mathbb P(A)=\frac12$`],a:0,e:R`$A\cup\overline A=\Omega$ et $A\cap\overline A=\varnothing$. Pour la version avec $\mathbb P_A(B)$ et $\mathbb P_{\overline A}(B)$, il faut en plus $\mathbb P(A)\neq0$ et $\mathbb P(\overline A)\neq0$.`},
+{t:"fpt",q:R`Pièce équilibrée. Pile : on tire dans l'urne A (3 blanches, 1 noire). Face : urne B (1 blanche, 3 noires). $\mathbb P(\text{blanche})=$`,c:[R`$\frac12$`,R`$\frac34$`,R`$\frac14$`,R`$\frac38$`],a:0,e:R`Notons $P$ : « la pièce donne Pile » et $F$ : « la pièce donne Face ». $(P,F)$ est un système complet, $\mathbb P(P)=\mathbb P(F)=\frac12\neq0$ : $\frac12\times\frac34+\frac12\times\frac14=\frac12$.`},
+{t:"fpt",q:R`Pièce équilibrée. Pile : on tire dans l'urne A (3 blanches, 1 noire). Face : urne B (1 blanche, 3 noires). Sachant que la boule est blanche, $\mathbb P(\text{Pile})=$`,c:[R`$\frac34$`,R`$\frac38$`,R`$\frac12$`],a:0,e:R`Notons $P$ : « la pièce donne Pile » et $Bl$ : « la boule tirée est blanche ». $\mathbb P_{Bl}(P)=\dfrac{\mathbb P(P\cap Bl)}{\mathbb P(Bl)}=\dfrac{3/8}{1/2}=\dfrac34$.`},
+{t:"fpt",q:"Quelle est la bonne formule ?",c:[R`$\mathbb P(B)=\sum_i\mathbb P(A_i)\,\mathbb P_{A_i}(B)$`,R`$\mathbb P(B)=\sum_i\mathbb P_{A_i}(B)$`,R`$\mathbb P(B)=\sum_i\mathbb P(A_i)\,\mathbb P_{B}(A_i)$`],a:0,e:R`Chaque $\mathbb P_{A_i}(B)$ est pondéré par $\mathbb P(A_i)$.`},
+{t:"fpt",q:"« On choisit une urne au hasard, puis on tire une boule. » Le système complet naturel porte sur :",c:["le choix de l'urne","la couleur de la boule","le nombre de boules"],a:0,e:"Le système complet décrit ce qui se passe en premier."},
+{t:"fpt",q:R`Quel lien entre $\mathbb P(A\cap B)$ et $\mathbb P_A(B)$ (avec $\mathbb P(A)\neq0$) ?`,c:[R`$\mathbb P(A\cap B)=\mathbb P(A)\,\mathbb P_A(B)$`,"ce sont les mêmes",R`$\mathbb P_A(B)=\mathbb P(A)\,\mathbb P(A\cap B)$`],a:0,e:R`Définition : $\mathbb P_A(B)=\dfrac{\mathbb P(A\cap B)}{\mathbb P(A)}$.`},
+{t:"fpt",q:R`Une maladie touche 1 % d'une population. Un test est positif chez 99 % des malades et chez 2 % des non-malades. Probabilité qu'un test soit positif :`,c:["0,0297","0,99","0,0198","0,01"],a:0,e:R`Notons $M$ : « l'individu est malade » et $T$ : « le test est positif ». $(M,\overline M)$ est un système complet, $\mathbb P(M)=0{,}01\neq0$, $\mathbb P(\overline M)=0{,}99\neq0$ : $0{,}01\times0{,}99+0{,}99\times0{,}02=0{,}0297$.`},
+{t:"fpt",q:R`Une maladie touche 1 % d'une population. Un test est positif chez 99 % des malades et chez 2 % des non-malades. Le test d'un individu est positif : probabilité qu'il soit malade ?`,c:[R`$\frac13$`,"0,99","0,01","0,0297"],a:0,e:R`Notons $M$ : « l'individu est malade » et $T$ : « le test est positif ». $\mathbb P_T(M)=\dfrac{\mathbb P(M\cap T)}{\mathbb P(T)}=\dfrac{0{,}0099}{0{,}0297}=\dfrac13$. Seulement une chance sur trois !`},
+{t:"fpt",q:R`Urnes $U_1$ (1 rouge, 3 blanches), $U_2$ (2 rouges, 2 blanches), $U_3$ (3 rouges, 1 blanche). On choisit une urne au hasard, puis on tire une boule. $\mathbb P(R)=$`,c:[R`$\frac12$`,R`$\frac32$`,R`$\frac13$`,R`$\frac14$`],a:0,e:R`$(U_1,U_2,U_3)$ est un système complet, $\mathbb P(U_i)=\frac13\neq0$ : $\frac13\left(\frac14+\frac24+\frac34\right)=\frac12$.`},
+{t:"fpt",q:R`Urnes $U_1$ (1 rouge, 3 blanches), $U_2$ (2 rouges, 2 blanches), $U_3$ (3 rouges, 1 blanche) ; on choisit une urne au hasard, puis on tire une boule. Un élève écrit $\mathbb P(R)=\mathbb P_{U_1}(R)+\mathbb P_{U_2}(R)+\mathbb P_{U_3}(R)$. Son erreur :`,c:[R`il manque les poids $\mathbb P(U_i)$`,"il fallait multiplier au lieu d'additionner","il n'y a pas d'erreur"],a:0,e:R`Il trouverait $\frac64=\frac32>1$ : impossible pour une probabilité.`},
+{t:"dist",q:R`Une usine a deux machines : $M_1$ fabrique 60 % des pièces, $M_2$ 40 %. 5 % des pièces de $M_1$ et 10 % des pièces de $M_2$ sont défectueuses ($D$). Pour calculer $\mathbb P(M_1\cap D)$, on utilise :`,c:["la formule des probabilités composées","la formule des probabilités totales"],a:0,e:R`C'est une intersection, un seul chemin de l'arbre : $\mathbb P(M_1\cap D)=\mathbb P(M_1)\,\mathbb P_{M_1}(D)=0{,}6\times0{,}05=0{,}03$.`},
+{t:"dist",q:R`Une usine a deux machines : $M_1$ fabrique 60 % des pièces, $M_2$ 40 %. 5 % des pièces de $M_1$ et 10 % des pièces de $M_2$ sont défectueuses ($D$). Pour calculer $\mathbb P(D)$, la probabilité qu'une pièce prise au hasard soit défectueuse, on utilise :`,c:["la formule des probabilités totales","la formule des probabilités composées"],a:0,e:R`Deux chemins mènent à $D$ (par $M_1$ et par $M_2$) : $(M_1,M_2)$ est un système complet non négligeable, et $\mathbb P(D)=0{,}6\times0{,}05+0{,}4\times0{,}1=0{,}07$.`},
+{t:"dist",q:R`Une usine a deux machines : $M_1$ fabrique 60 % des pièces, $M_2$ 40 %. 5 % des pièces de $M_1$ et 10 % des pièces de $M_2$ sont défectueuses ($D$). $\mathbb P(D)=$`,c:["0,07","0,03","0,15","0,075"],a:0,e:R`$0{,}03+0{,}04=0{,}07$. 0,03 ne garde que le chemin par $M_1$ ; 0,15 oublie les poids ; 0,075 est une moyenne non pondérée.`},
+{t:"dist",q:R`Une usine a deux machines : $M_1$ fabrique 60 % des pièces, $M_2$ 40 %. 5 % des pièces de $M_1$ et 10 % des pièces de $M_2$ sont défectueuses ($D$). Un élève écrit : « $\mathbb P(D)=\mathbb P(M_1)\,\mathbb P_{M_1}(D)=0{,}03$ ». Son erreur :`,c:[R`il n'a gardé que le chemin passant par $M_1$`,"il aurait dû additionner au lieu de multiplier","il n'y a pas d'erreur"],a:0,e:R`$\mathbb P(M_1)\,\mathbb P_{M_1}(D)$ vaut $\mathbb P(M_1\cap D)$, pas $\mathbb P(D)$. Il manque le terme $\mathbb P(M_2)\,\mathbb P_{M_2}(D)$.`},
+{t:"dist",q:R`Une usine a deux machines : $M_1$ fabrique 60 % des pièces, $M_2$ 40 %. 5 % des pièces de $M_1$ et 10 % des pièces de $M_2$ sont défectueuses ($D$). Sans calcul : $\mathbb P(D)$ est forcément :`,c:["entre 0,05 et 0,1","inférieure à 0,05","supérieure à 0,1"],a:0,e:R`$\mathbb P(D)=0{,}6\times0{,}05+0{,}4\times0{,}1$ est une moyenne pondérée de $0{,}05$ et $0{,}1$. C'est un bon moyen de contrôler un résultat.`},
+{t:"dist",q:"Sur un arbre, la formule des probabilités composées revient à :",c:["multiplier les probabilités le long d'un chemin","additionner les probabilités de plusieurs chemins","lire la probabilité sur une seule branche"],a:0,e:R`$\mathbb P(A_1\cap\dots\cap A_n)$ est le produit des probabilités portées par les branches du chemin.`},
+{t:"dist",q:"Sur un arbre, la formule des probabilités totales revient à :",c:["additionner les probabilités de tous les chemins qui mènent à B","multiplier les probabilités le long d'un chemin","lire la probabilité sur la dernière branche"],a:0,e:R`Chaque chemin qui mène à $B$ a pour probabilité $\mathbb P(A_i)\,\mathbb P_{A_i}(B)$, et $\mathbb P(B)$ est leur somme.`},
+{t:"dist",q:R`Dans la formule des probabilités totales, chaque terme $\mathbb P(A_i)\times\mathbb P_{A_i}(B)$ est égal à :`,c:[R`$\mathbb P(A_i\cap B)$, par les probabilités composées`,R`$\mathbb P(B)$`,R`$\mathbb P_{A_i}(B)$`],a:0,e:"Les deux formules travaillent ensemble : les composées donnent chaque chemin, les totales en font la somme."},
+{t:"dist",q:R`Urne de 3 rouges et 2 blanches, deux tirages successifs sans remise ; $R_k$ : « la $k$-ième boule tirée est rouge ». Pour $\mathbb P(R_1\cap R_2)$, on utilise :`,c:["les probabilités composées","les probabilités totales"],a:0,e:R`$\mathbb P(R_1\cap R_2)=\mathbb P(R_1)\,\mathbb P_{R_1}(R_2)=\frac35\times\frac24=\frac3{10}$.`},
+{t:"dist",q:R`Urne de 3 rouges et 2 blanches, tirages successifs sans remise ; $R_k$ : « la $k$-ième boule tirée est rouge ». Pour $\mathbb P(R_2)$, on utilise :`,c:[R`les probabilités totales, avec le système complet $(R_1,\overline{R_1})$`,"les probabilités composées seules",R`$\mathbb P(R_2)=\mathbb P_{R_1}(R_2)$`],a:0,e:"On ne sait rien de la 1re boule : deux chemins mènent à R₂."},
+{t:"dist",q:R`Urne de 3 rouges et 2 blanches, tirages successifs sans remise ; $R_k$ : « la $k$-ième boule tirée est rouge ». $\mathbb P(R_2)=$`,c:[R`$\frac35$`,R`$\frac3{10}$`,R`$\frac12$`],a:0,e:R`$\mathbb P(R_1)\mathbb P_{R_1}(R_2)+\mathbb P(\overline{R_1})\mathbb P_{\overline{R_1}}(R_2)=\frac35\times\frac24+\frac25\times\frac34=\frac{6}{20}+\frac{6}{20}=\frac35$. Même probabilité qu'au 1er tirage.`},
+{t:"dist",q:R`Urne de 3 rouges et 2 blanches, trois tirages successifs sans remise. Pour la probabilité que les trois boules soient rouges, on utilise :`,c:["les probabilités composées, avec trois facteurs","les probabilités totales","les deux formules ensemble"],a:0,e:R`$\mathbb P(R_1\cap R_2\cap R_3)=\frac35\times\frac24\times\frac13=\frac1{10}$ : un seul chemin.`},
+{t:"dist",q:R`Hypothèse de la formule des probabilités composées pour $\mathbb P(A_1\cap A_2\cap A_3)$ :`,c:[R`$\mathbb P(A_1\cap A_2)\neq0$`,R`$(A_1,A_2,A_3)$ est un système complet d'événements`,R`$A_1$, $A_2$, $A_3$ sont indépendants`],a:0,e:R`Il faut que les probabilités conditionnelles $\mathbb P_{A_1}$ et $\mathbb P_{A_1\cap A_2}$ soient définies. Aucun système complet n'est demandé.`},
+{t:"dist",q:R`Hypothèse de la formule $\mathbb P(B)=\sum_{i=1}^n\mathbb P(A_i)\,\mathbb P_{A_i}(B)$ :`,c:[R`$(A_1,\dots,A_n)$ est un système complet d'événements non négligeables`,R`$\mathbb P(A_1\cap\dots\cap A_{n-1})\neq0$`,R`les $A_i$ sont indépendants`],a:0,e:"C'est l'hypothèse des probabilités totales (version ②). Celle des probabilités composées est différente."},
+{t:"dist",q:R`On choisit au hasard un dé parmi deux : un équilibré, et un truqué qui donne 6 avec probabilité $\frac12$. On le lance. Probabilité de choisir le dé truqué et d'obtenir 6 :`,c:[R`$\frac14$`,R`$\frac13$`,R`$\frac12$`],a:0,e:R`Notons $T$ : « on choisit le dé truqué » et $S$ : « on obtient 6 ». Probabilités composées : $\mathbb P(T\cap S)=\mathbb P(T)\,\mathbb P_T(S)=\frac12\times\frac12=\frac14$.`},
+{t:"dist",q:R`On choisit au hasard un dé parmi deux : un équilibré, et un truqué qui donne 6 avec probabilité $\frac12$. On le lance. Probabilité d'obtenir 6 :`,c:[R`$\frac13$`,R`$\frac14$`,R`$\frac23$`],a:0,e:R`Notons $T$ : « on choisit le dé truqué » et $S$ : « on obtient 6 ». Probabilités totales avec le système complet $(T,\overline T)$ : $\frac12\times\frac12+\frac12\times\frac16=\frac3{12}+\frac1{12}=\frac13$.`},
+{t:"dist",q:R`Pièce équilibrée : Pile, on tire dans l'urne A (3 blanches, 1 noire) ; Face, dans l'urne B (1 blanche, 3 noires). Probabilité d'obtenir Pile et une boule blanche :`,c:[R`$\frac38$`,R`$\frac12$`,R`$\frac34$`],a:0,e:R`Un seul chemin : $\frac12\times\frac34=\frac38$. ($\frac12$ est $\mathbb P(\text{blanche})$, par les probabilités totales.)`},
+{t:"dist",q:"La formule des probabilités composées fait apparaître :",c:["un produit","une somme"],a:0,e:R`$\mathbb P(A_1\cap\dots\cap A_n)=\mathbb P(A_1)\,\mathbb P_{A_1}(A_2)\cdots\mathbb P_{A_1\cap\dots\cap A_{n-1}}(A_n)$.`},
+{t:"dist",q:R`La formule des probabilités totales $\mathbb P(B)=\dots$ (version avec les $\mathbb P_{A_i}(B)$) fait apparaître :`,c:["une somme, dont chaque terme est un produit","un produit, dont chaque facteur est une somme","un produit seulement"],a:0,e:R`$\mathbb P(B)=\sum_{i=1}^n\mathbb P(A_i)\times\mathbb P_{A_i}(B)$.`},
+{t:"dist",q:"La formule de Bayes fait apparaître :",c:["un produit divisé par une somme","une somme divisée par un produit","un produit seulement"],a:0,e:R`$\mathbb P_B(A_j)=\dfrac{\mathbb P(A_j)\,\mathbb P_{A_j}(B)}{\sum_i\mathbb P(A_i)\,\mathbb P_{A_i}(B)}$.`},
+{t:"var",q:"Une variable aléatoire réelle X est :",c:[R`une application de $\Omega$ dans $\mathbb R$`,"un événement","une probabilité","un nombre"],a:0,e:R`$X$ associe un réel $X(\omega)$ à chaque résultat $\omega$.`},
+{t:"var",q:R`$X(\Omega)=\{x_1,\dots,x_r\}$. Les événements $[X=x_1],\dots,[X=x_r]$ :`,c:["forment un système complet d'événements","sont mutuellement indépendants","sont tous de probabilité non nulle"],a:0,e:R`Chaque $\omega$ réalise exactement un $[X=x_i]$. On peut donc appliquer la formule des probabilités totales avec ce système.`},
+{t:"var",q:R`$F$ est la fonction de répartition de $X$. $\mathbb P([a\lt X\leqslant b])=$`,c:[R`$F(b)-F(a)$`,R`$F(a)-F(b)$`,R`$F(b)$`],a:0,e:R`$[X\leqslant b]=[X\leqslant a]\cup[a\lt X\leqslant b]$, réunion disjointe.`},
+{t:"var",q:R`La fonction de répartition d'une variable aléatoire finie est :`,c:["continue à droite et discontinue à gauche en chaque valeur prise avec probabilité non nulle","continue partout","continue à gauche partout"],a:0,e:R`$F$ est constante sur $[x_k;x_{k+1}[$ et fait un saut de hauteur $\mathbb P([X=x_k])$ en $x_k$.`},
+{t:"var",q:R`$V(X)=0$. Alors, avec $m=\mathbb E(X)$ :`,c:[R`$\mathbb P([X=m])=1$`,R`$X=0$`,R`$\mathbb E(X)=0$`],a:0,e:R`$X$ est quasi-certaine : $\mathbb P([X\neq m])=0$.`},
+{t:"var",q:R`$X^*=\dfrac{X-\mathbb E(X)}{\sigma_X}$ (avec $V(X)\neq0$). $\mathbb E(X^*)$ et $V(X^*)$ valent :`,c:["0 et 1","1 et 0","0 et 0"],a:0,e:R`Linéarité : $\mathbb E(X^*)=0$ (centrée). $V(aX+b)=a^2V(X)$ : $V(X^*)=\frac{V(X)}{\sigma_X^2}=1$ (réduite).`},
+{t:"var",q:R`Définition : $X$ et $Y$ sont indépendantes si :`,c:[R`pour tout $(x,y)\in X(\Omega)\times Y(\Omega)$, $\mathbb P([X=x]\cap[Y=y])=\mathbb P([X=x])\,\mathbb P([Y=y])$`,R`$\mathbb E(XY)=\mathbb E(X)\,\mathbb E(Y)$`,R`$V(X+Y)=V(X)+V(Y)$`],a:0,e:"Les deux autres égalités sont des conséquences de l'indépendance, pas sa définition."},
+{t:"var",q:R`$X$ et $Y$ sont indépendantes. $X^2$ et $e^Y$ sont :`,c:["indépendantes","on ne peut pas savoir","incompatibles"],a:0,e:R`Si $X$ et $Y$ sont indépendantes, $u(X)$ et $v(Y)$ le sont aussi.`},
+{t:"var",q:R`$[X=2]$ est :`,c:["un événement","un nombre","un résultat"],a:0,e:R`$[X=2]=\{\omega\in\Omega\mid X(\omega)=2\}$ est une partie de $\Omega$. On écrit donc $\mathbb P([X=2])$.`},
+{t:"var",q:R`$X(\Omega)=\{1,2,3\}$, $\mathbb P([X=1])=0{,}2$, $\mathbb P([X=2])=0{,}5$, $\mathbb P([X=3])=a$. Alors $a=$`,c:["0,3","0,5","0,7","on ne peut pas savoir"],a:0,e:R`La somme des probabilités de la loi vaut 1 : $a=1-0{,}2-0{,}5=0{,}3$.`},
+{t:"var",q:R`$X$ prend les valeurs 1, 2, 3 avec les probabilités 0,2 ; 0,5 ; 0,3. $\mathbb E(X)=$`,c:["2,1","2","1","6"],a:0,e:R`$\mathbb E(X)=1\times0{,}2+2\times0{,}5+3\times0{,}3=2{,}1$.`},
+{t:"var",q:R`$X$ prend les valeurs 1, 2, 3 avec les probabilités 0,2 ; 0,5 ; 0,3. $\mathbb E(X^2)=$`,c:["4,9","4,41","2,1","14"],a:0,e:R`Théorème de transfert : $1\times0{,}2+4\times0{,}5+9\times0{,}3=4{,}9$. Ce n'est pas $\mathbb E(X)^2=4{,}41$.`},
+{t:"var",q:R`$X$ prend les valeurs 1, 2, 3 avec les probabilités 0,2 ; 0,5 ; 0,3. $V(X)=$`,c:["0,49","4,9","0,7","2,8"],a:0,e:R`Kœnig-Huygens : $V(X)=\mathbb E(X^2)-\mathbb E(X)^2=4{,}9-4{,}41=0{,}49$.`},
+{t:"var",q:R`$X$ prend les valeurs 1, 2, 3 avec les probabilités 0,2 ; 0,5 ; 0,3. $F_X(2{,}5)=\mathbb P([X\leqslant2{,}5])=$`,c:["0,7","0,5","0,2","1"],a:0,e:R`$[X\leqslant2{,}5]=[X=1]\cup[X=2]$ : $0{,}2+0{,}5=0{,}7$.`},
+{t:"var",q:R`La fonction de répartition de $X$ est définie par $F_X(x)=$`,c:[R`$\mathbb P([X\leqslant x])$`,R`$\mathbb P([X=x])$`,R`$\mathbb P([X\lt x])$`,R`$\mathbb P([X\geqslant x])$`],a:0,e:"Inégalité large, au sens « inférieur ou égal »."},
+{t:"var",q:R`$\mathbb E(X)=3$ et $V(X)=2$. $\mathbb E(2X+1)=$`,c:["7","6","13","9"],a:0,e:R`$\mathbb E(2X+1)=2\,\mathbb E(X)+1=7$.`},
+{t:"var",q:R`$\mathbb E(X)=3$ et $V(X)=2$. $V(2X+1)=$`,c:["8","9","4","5"],a:0,e:R`$V(aX+b)=a^2V(X)$ : $4\times2=8$. La constante $+1$ ne change pas la dispersion.`},
+{t:"var",q:R`$V(-X)=$`,c:[R`$V(X)$`,R`$-V(X)$`,"0"],a:0,e:R`$V(-X)=(-1)^2\,V(X)=V(X)$. Une variance est toujours positive.`},
+{t:"var",q:R`$\mathbb E(X+Y)=\mathbb E(X)+\mathbb E(Y)$ est vrai :`,c:["toujours",R`seulement si $X$ et $Y$ sont indépendantes`,R`seulement si $X=Y$`],a:0,e:"La linéarité de l'espérance ne demande aucune hypothèse."},
+{t:"var",q:R`$\mathbb E(XY)=\mathbb E(X)\,\mathbb E(Y)$ est vrai :`,c:[R`si $X$ et $Y$ sont indépendantes`,"toujours","jamais"],a:0,e:R`C'est faux en général : avec $Y=X$ de loi $\mathcal B\big(\frac12\big)$, $\mathbb E(X^2)=\frac12$ mais $\mathbb E(X)^2=\frac14$.`},
+{t:"var",q:R`$X$ et $Y$ indépendantes, $V(X)=2$, $V(Y)=3$. $V(X-Y)=$`,c:["5","−1","1","13"],a:0,e:R`$V(X-Y)=V(X)+(-1)^2V(Y)=5$. Les variances s'ajoutent, même pour une différence.`},
+{t:"var",q:R`$X\hookrightarrow\mathcal U([\![1;3]\!])$. $\mathbb E(X^2)=$`,c:[R`$\frac{14}3$`,"4","2","9"],a:0,e:R`Transfert : $\frac13(1+4+9)=\frac{14}3$. Ce n'est pas $\mathbb E(X)^2=4$.`},
+{t:"var",q:R`Un calcul donne $V(X)=-0{,}3$. Que conclure ?`,c:["il y a une erreur de calcul",R`$X$ prend des valeurs négatives`,R`$\mathbb E(X)<0$`],a:0,e:R`$V(X)=\mathbb E\big((X-\mathbb E(X))^2\big)\geqslant0$ toujours. Vérifier par exemple le calcul de $\mathbb E(X^2)$.`},
+{t:"loi",q:R`On lance 10 fois un dé équilibré ; $X$ = nombre de 6 obtenus.`,c:[R`$\mathscr B\big(10,\frac16\big)$`,R`$\mathcal U([\![1;6]\!])$`,R`$\mathcal B\big(\frac16\big)$`,"pas usuelle"],a:0,e:R`10 épreuves indépendantes, succès « 6 » de probabilité $\frac16$ : $\mathbb E(X)=\frac{10}6=\frac53$.`},
+{t:"loi",q:R`Si $X\hookrightarrow\mathscr B(n,p)$, alors $\mathbb E(X)=$`,c:[R`$np$`,R`$np(1-p)$`,R`$p$`,R`$\frac{n+1}2$`],a:0,e:R`$\mathbb E(X)=np$ et $V(X)=np(1-p)$.`},
+{t:"loi",q:R`Si $X\hookrightarrow\mathcal U([\![1;n]\!])$, alors $\mathbb E(X)=$`,c:[R`$\frac{n+1}2$`,R`$\frac n2$`,R`$\frac1n$`,R`$np$`],a:0,e:R`C'est la moyenne de $1,2,\dots,n$ : $\frac{n+1}2$.`},
+{t:"loi",q:R`Urne de 4 rouges et 6 blanches, 3 tirages <b>sans</b> remise ; $X$ = nombre de rouges.`,c:[R`$\mathscr B\big(3,\frac25\big)$`,"pas usuelle (pas binomiale)",R`$\mathcal U([\![0;3]\!])$`],a:1,e:"Sans remise, les tirages ne sont pas indépendants."},
+{t:"loi",q:R`Urne de 4 rouges et 6 blanches, 3 tirages <b>avec</b> remise ; $X$ = nombre de rouges.`,c:[R`$\mathscr B\big(3,\frac25\big)$`,"pas usuelle",R`$\mathcal B\big(\frac25\big)$`],a:0,e:R`$\mathbb E(X)=3\times\frac25=\frac65$.`},
+{t:"loi",q:R`QCM de 20 questions à 4 réponses ; on répond au hasard, indépendamment. $\mathbb E(\text{nombre de bonnes réponses})=$`,c:["5","4","10",R`$\frac{20}3$`],a:0,e:R`$X\hookrightarrow\mathscr B\big(20,\frac14\big)$, $\mathbb E(X)=5$.`},
+{t:"loi",q:R`On choisit un entier au hasard dans $[\![1;100]\!]$. $\mathbb E(X)=$`,c:["50","50,5","51"],a:1,e:R`$X\hookrightarrow\mathcal U([\![1;100]\!])$ : $\frac{101}2=50{,}5$.`},
+{t:"loi",q:R`$X$ vaut 1 si une graine germe (probabilité 0,7), et 0 sinon.`,c:[R`$\mathcal B(0{,}7)$`,R`$\mathcal U(\{0,1\})$`,"pas usuelle"],a:0,e:R`Loi de Bernoulli : $\mathbb E(X)=0{,}7$, $V(X)=0{,}21$.`},
+{t:"loi",q:R`On lance deux dés ; $X$ est le plus grand des deux résultats.`,c:["pas usuelle",R`$\mathcal U([\![1;6]\!])$`,R`$\mathscr B\big(2,\frac16\big)$`],a:0,e:R`$\mathbb P([X=1])=\frac1{36}$ mais $\mathbb P([X=6])=\frac{11}{36}$ : pas uniforme.`},
+{t:"loi",q:R`On sème 50 graines ; chacune germe avec probabilité 0,8, indépendamment. $\mathbb E(\text{nombre de graines germées})=$`,c:["40","0,8","10","25"],a:0,e:R`$X\hookrightarrow\mathscr B(50\,;0{,}8)$, $\mathbb E(X)=50\times0{,}8=40$.`},
+{t:"loi",q:R`On lance un dé équilibré ; $X$ est le résultat. $\mathbb E(X)=$`,c:[R`$\frac72$`,"3",R`$\frac16$`,"6"],a:0,e:R`$X\hookrightarrow\mathcal U([\![1;6]\!])$ : $\mathbb E(X)=\frac{6+1}2$.`},
+{t:"loi",q:R`On lance deux dés ; $X$ est la somme.`,c:["pas usuelle",R`$\mathcal U([\![2;12]\!])$`,R`$\mathscr B\big(2,\frac16\big)$`],a:0,e:R`Les valeurs ne sont pas équiprobables : $\mathbb P([X=2])=\frac1{36}$ mais $\mathbb P([X=7])=\frac16$.`},
+{t:"loi",q:R`$X\hookrightarrow\mathcal U([\![3;10]\!])$. $\mathbb E(X)=$`,c:[R`$\frac{13}2$`,R`$\frac{11}2$`,"5","4"],a:0,e:R`Sur $[\![a;b]\!]$ : $\mathbb E(X)=\frac{a+b}2=\frac{13}2$.`},
+{t:"loi",q:R`$X$ est la variable certaine égale à 5. $\mathbb E(X)$ et $V(X)$ valent :`,c:["5 et 0","5 et 5","0 et 5"],a:0,e:R`$\mathbb P([X=5])=1$ : $\mathbb E(X)=5$ et $V(X)=0$.`},
+{t:"loi",q:R`$A$ est un événement. La variable indicatrice $\mathbf 1_A$ suit la loi :`,c:[R`$\mathcal B\big(\mathbb P(A)\big)$`,R`$\mathcal U(\{0,1\})$`,R`$\mathscr B\big(2,\mathbb P(A)\big)$`],a:0,e:R`$[\mathbf 1_A=1]=A$ et $[\mathbf 1_A=0]=\overline A$.`},
+{t:"loi",q:R`$X_1,\dots,X_n$ sont mutuellement indépendantes, de loi $\mathcal B(p)$. $X_1+\dots+X_n$ suit :`,c:[R`$\mathscr B(n,p)$`,R`$\mathcal B(np)$`,R`$\mathcal U([\![0;n]\!])$`],a:0,e:R`Théorème du cours. On retrouve $\mathbb E=np$ par linéarité et $V=np(1-p)$ par indépendance.`},
+{t:"loi",q:R`$X$ suit la loi binomiale $\mathscr B(n,p)$. $X(\Omega)=$`,c:[R`$[\![0;n]\!]$`,R`$[\![1;n]\!]$`,R`$\{0,1\}$`],a:0,e:R`$X$ compte des succès parmi $n$ épreuves : de 0 à $n$.`},
+{t:"loi",q:R`$X$ suit la loi binomiale $\mathscr B(n,p)$. Pour $k\in[\![0;n]\!]$, $\mathbb P([X=k])=$`,c:[R`$\dbinom nk p^k(1-p)^{n-k}$`,R`$p^k(1-p)^{n-k}$`,R`$\dbinom nk p^{n-k}(1-p)^k$`],a:0,e:R`$p^k(1-p)^{n-k}$ est la probabilité d'un chemin à $k$ succès, et il y a $\binom nk$ tels chemins.`},
+{t:"loi",q:R`$X$ suit la loi binomiale $\mathscr B\big(4,\frac12\big)$. $\mathbb P([X=2])=$`,c:[R`$\frac38$`,R`$\frac14$`,R`$\frac12$`],a:0,e:R`$\binom42\left(\frac12\right)^2\left(\frac12\right)^2=\frac6{16}=\frac38$.`},
+{t:"loi",q:R`$X$ suit la loi binomiale $\mathscr B\big(10,\frac16\big)$. $\mathbb P([X=0])=$`,c:[R`$\left(\frac56\right)^{10}$`,R`$\left(\frac16\right)^{10}$`,"0"],a:0,e:R`$\binom{10}0\left(\frac16\right)^0\left(\frac56\right)^{10}$ : aucun succès, dix échecs.`},
+{t:"loi",q:R`On lance 10 fois un dé équilibré et on note $X$ le nombre de 6 obtenus. Probabilité d'obtenir au moins un 6 :`,c:[R`$1-\left(\frac56\right)^{10}$`,R`$\frac{10}6$`,R`$\left(\frac16\right)^{10}$`],a:0,e:R`$X\hookrightarrow\mathscr B\big(10,\frac16\big)$ et $\mathbb P([X\geqslant1])=1-\mathbb P([X=0])=1-\left(\frac56\right)^{10}\approx0{,}84$ (exemple du cours).`},
+{t:"loi",q:R`$X$ suit la loi binomiale $\mathscr B\big(10,\frac16\big)$. $V(X)=$`,c:[R`$\frac{25}{18}$`,R`$\frac53$`,R`$\frac5{18}$`],a:0,e:R`$V(X)=np(1-p)=10\times\frac16\times\frac56=\frac{50}{36}=\frac{25}{18}$.`},
+{t:"loi",q:R`On lance 5 fois une pièce équilibrée et on note $X$ le nombre de Pile obtenus. Quelle justification de la loi de $X$ est correcte ?`,c:[R`« Cette expérience est constituée de 5 épreuves de Bernoulli identiques et indépendantes (succès : « obtenir Pile », de probabilité $\frac12$). $X$ compte le nombre de succès, donc $X\hookrightarrow\mathscr B\big(5,\frac12\big)$. »`,R`« $X$ prend ses valeurs dans $[\![0;5]\!]$, donc $X\hookrightarrow\mathscr B\big(5,\frac12\big)$. »`,R`« $X$ prend 6 valeurs, donc $X\hookrightarrow\mathcal U([\![0;5]\!])$. »`],a:0,e:R`Connaître $X(\Omega)$ ne suffit pas : il faut reconnaître le schéma de Bernoulli (épreuves identiques et indépendantes) et dire que $X$ compte les succès.`},
+{t:"loi",q:R`On lance 5 fois une pièce équilibrée et on note $X$ le nombre de Pile obtenus. Les valeurs $0,1,\dots,5$ de $X$ sont-elles équiprobables ?`,c:["Non","Oui"],a:0,e:R`$\mathbb P([X=0])=\frac1{32}$ mais $\mathbb P([X=2])=\binom52\frac1{32}=\frac{10}{32}$. $X$ suit $\mathscr B\big(5,\frac12\big)$, pas une loi uniforme.`},
+{t:"loi",q:R`$X$ suit la loi binomiale $\mathscr B(n,p)$ et $Y=n-X$ est le nombre d'échecs. $Y$ suit la loi :`,c:[R`$\mathscr B(n,1-p)$`,R`$\mathscr B(n,p)$`,R`$\mathcal U([\![0;n]\!])$`],a:0,e:"Un échec a la probabilité 1 − p, et les épreuves restent identiques et indépendantes."},
+{t:"loi",q:R`$X$ suit la loi binomiale $\mathscr B\big(10,\frac12\big)$ et $Y=2X+1$. $\mathbb E(Y)=$`,c:["11","10","21","5"],a:0,e:R`$\mathbb E(X)=10\times\frac12=5$, puis par linéarité $\mathbb E(Y)=2\times5+1=11$.`},
+{t:"loi",q:R`QCM de 20 questions à 4 réponses ; on répond au hasard, indépendamment d'une question à l'autre. $X$ est le nombre de bonnes réponses. $V(X)=$`,c:[R`$\frac{15}4$`,"5",R`$\frac54$`],a:0,e:R`$X\hookrightarrow\mathscr B\big(20,\frac14\big)$ : $V(X)=20\times\frac14\times\frac34=\frac{15}4$.`},
+{t:"loi",q:R`$X$ suit la loi uniforme $\mathcal U([\![1;n]\!])$. $V(X)=$`,c:[R`$\dfrac{n^2-1}{12}$`,R`$\dfrac{n+1}2$`,R`$\dfrac{n^2}{12}$`],a:0,e:R`Démonstration du cours : $\mathbb E(X^2)=\frac{(n+1)(2n+1)}6$, puis Kœnig-Huygens.`},
+{t:"loi",q:R`On lance un dé équilibré et on note $X$ le résultat. $V(X)=$`,c:[R`$\frac{35}{12}$`,R`$\frac72$`,"3"],a:0,e:R`$X\hookrightarrow\mathcal U([\![1;6]\!])$ : $V(X)=\frac{6^2-1}{12}=\frac{35}{12}$.`},
+{t:"loi",q:R`$a\lt b$ sont des entiers et $X$ suit la loi uniforme $\mathcal U([\![a;b]\!])$. Pour $i\in[\![a;b]\!]$, $\mathbb P([X=i])=$`,c:[R`$\dfrac1{b-a+1}$`,R`$\dfrac1{b-a}$`,R`$\dfrac1b$`],a:0,e:R`$[\![a;b]\!]$ contient $b-a+1$ entiers, tous de même probabilité.`},
+{t:"loi",q:R`On choisit un chiffre au hasard entre 0 et 9 et on note $X$ ce chiffre. $\mathbb E(X)=$`,c:[R`$\frac92$`,"5",R`$\frac{11}2$`],a:0,e:R`$X\hookrightarrow\mathcal U([\![0;9]\!])$ et $\mathbb E(X)=\frac{a+b}2=\frac{0+9}2$.`},
+{t:"loi",q:R`$X$ suit la loi uniforme $\mathcal U([\![1;n]\!])$ et $Y=X-1$. $Y$ suit la loi :`,c:[R`$\mathcal U([\![0;n-1]\!])$`,R`$\mathcal U([\![1;n]\!])$`,R`$\mathscr B(n,\frac1n)$`],a:0,e:R`$Y$ prend les $n$ valeurs $0,\dots,n-1$, chacune avec la probabilité $\frac1n$.`},
+{t:"loi",q:R`$X$ suit la loi de Bernoulli $\mathcal B(p)$. Dans la définition du cours, $p$ appartient à :`,c:[R`$]0,1[$`,R`$\mathbb N$`,R`$]1,+\infty[$`],a:0,e:"Une probabilité de succès strictement comprise entre 0 et 1."},
+{t:"loi",q:R`$X$ suit la loi de Bernoulli $\mathcal B(p)$. $\mathbb E(X^2)=$`,c:[R`$p$`,R`$p^2$`,"1"],a:0,e:R`$X$ ne prend que les valeurs 0 et 1, donc $X^2=X$. Transfert : $0^2(1-p)+1^2p=p$.`},
+{t:"loi",q:R`$X$ suit la loi de Bernoulli $\mathcal B(p)$. Pour quelle valeur de $p$ la variance $V(X)$ est-elle la plus grande ?`,c:[R`$p=\frac12$`,R`$p$ proche de 1`,R`$p$ proche de 0`],a:0,e:R`$V(X)=p(1-p)$ est maximale en $p=\frac12$, où elle vaut $\frac14$.`},
+{t:"loi",q:R`Quelle loi simule la fonction Python du cours <code>def bernoulli(p): if random() &lt;= p: return 1 ; return 0</code> ?`,c:[R`$\mathcal B(p)$`,R`$\mathcal U(\{0,1\})$`,R`$\mathscr B(1,1-p)$`],a:0,e:R`<code>random()</code> renvoie un réel au hasard dans $[0,1[$ : il est inférieur ou égal à $p$ avec la probabilité $p$.`},
+{t:"loi",q:R`Quelle loi simule l'expression Python du cours <code>a + int((b-a+1)*random())</code> ?`,c:[R`$\mathcal U([\![a;b]\!])$`,R`$\mathcal U([\![a;b-1]\!])$`,R`$\mathscr B(b-a,\frac12)$`],a:0,e:R`<code>int((b-a+1)*random())</code> prend les $b-a+1$ valeurs $0,\dots,b-a$ de façon équiprobable.`},
+{t:"loi",q:R`Si $X\hookrightarrow\mathscr B(n,p)$, alors $V(X)=$`,c:[R`$np(1-p)$`,R`$np$`,R`$p(1-p)$`],a:0,e:R`$V(X)=np(1-p)$.`}
+];
+Q.forEach(q=>{q.id=hash(q.q+"|"+q.c.join("|"))});
+const QBYID=Object.fromEntries(Q.map(q=>[q.id,q]));
+
+/* ======================= QUIZ EN CLASSE ======================= */
+/* Listes fixes : identifiants = hash du texte de la question. Si une question est réécrite, mettre à jour son identifiant ici. */
+const CLASSE=[
+{ids:["qbtxtxd","qduogiu","qd055wz","qki778r","q1e6vmhx","q17is0p1","q169omb4","qkg0wm9","q5seb9i","q1az45cj"]},
+{ids:["qa9czxp","qjxl1j9","q60wnl3","q14uxju9","q1lkqnv5","q1vco3cv","q1tw20hb","q1f4zfei","q1mof04l","q13zimbc"]},
+{ids:["q1ep2crk","q1necfgp","q1osh5qe","qul7d84","qsopwdx","q17ciiom","qoprqi1","qefq726","qc5yt3i","q1hei94i"]},
+{ids:["qfghswl","q1d6qd5e","qdrt56v","ql0elmw","qdvqu72","qgjp0e3","q1ohwt8m","q1sznb7t","qyhic6y","qwtq7d0"]},
+{ids:["q1c53n0c","q1smgvu0","q171pzea","q1re32ed","qtx5l35","qjt9gqv","q12sqzk2","qo36o64","q172zkqa","q1isfi95"]},
+{ids:["qrwlf7u","qgoe49t","qns8kq4","quwq1il","q1v6il0l","q1hj9d7y","qler3b0","q1sos9bm","qudj8mk","q15zmqlr"]},
+{ids:["qec188p","q6plx8t","q1vvcrmn","q1pbmkal","q1oagh2q","qmahrpa","qmooxu4","q14qwel0","q1m3tze1","qnoln2s"]},
+{ids:["q8x3055","q6535gw","q8e1o26","q175m8vi","q17rmvtu","q1otnho5","qorzrax","qvwjedr","qmxs2nq","qnixh1g"]},
+{ids:["qfpb7e8","qbepamx","q1s3k4ej","q19p4ouj","q1j6web1","qmzbsw7","q1kc4ztf","q1glr089","q1buvozi","q9yjq3a"]},
+{ids:["qazv2sq","q15qxu79","qtc4o9","q127zt9r","qz6ufgj","q15n1oi3","q1c921j4","q1u3o0sc","q15j2ay4","q1gr0wle"]}
+];
+const LETTRES="ABCDEF";
+/* Ordre des réponses fixé par l'identifiant de la question : le même sur tous les téléphones. */
+function fixedOrder(q){let s=0;for(let i=0;i<q.id.length;i++)s=(s*31+q.id.charCodeAt(i))>>>0;
+  const rnd=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296};
+  const a=q.c.map((c,k)=>({c,k}));for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function letterOf(q){return LETTRES[fixedOrder(q).findIndex(o=>o.k===q.a)]}
+
+/* ======================= QUIZ ======================= */
+const LEN=10;
+let best=store.get("ap_best",{});      // meilleure note par thème (sur 10)
+let missed=store.get("ap_missed",[]);  // ids des questions ratées, à revoir
+let hist=store.get("ap_hist",[]);      // dernières séries
+missed=missed.filter(id=>QBYID[id]);
+let quiz={mode:"home",theme:"all",list:[],i:0,pts:0,res:[],answered:false};
+
+function startSerie(theme,review){
+  let ids;
+  if(review){ids=shuffle(missed).slice(0,LEN)}
+  else{const pool=Q.filter(q=>theme==="all"||q.t===theme).map(q=>q.id);ids=shuffle(pool).slice(0,LEN)}
+  if(!ids.length)return;
+  quiz={mode:"play",theme:review?"review":theme,list:ids,i:0,pts:0,res:[],answered:false};renderQuiz();
+}
+function startClasse(n){
+  const c=CLASSE[n];if(!c)return;
+  const ids=c.ids.filter(id=>QBYID[id]);if(!ids.length)return;
+  quiz={mode:"play",theme:"classe",classe:n,list:ids,i:0,pts:0,res:[],answered:false};renderQuiz();
+  window.scrollTo(0,0);
+}
+function renderQuiz(){
+  const v=document.getElementById("v-quiz");
+  if(quiz.mode==="home")return renderHome(v);
+  if(quiz.mode==="end")return renderEnd(v);
+  renderPlay(v);
+}
+function renderHome(v){
+  const chips=["all",...Object.keys(THEMES)];
+  const total=hist.reduce((s,h)=>s+h.pts,0);
+  v.innerHTML=`<div class="panel"><div class="eyebrow">Quiz</div><h2>Une série de ${LEN} questions</h2>
+  <p class="lead">Un point par bonne réponse. Chaque réponse est corrigée et expliquée, avec le rappel de cours à côté. Les questions ratées sont gardées pour être rejouées.</p>
+  <h3 style="margin-bottom:8px">Choisir un thème</h3>
+  <div class="chips" role="group" aria-label="Thème">${chips.map(k=>`<button type="button" data-th="${k}" aria-pressed="${quiz.theme===k}">${k==="all"?"Tout mélanger":THEMES[k]}</button>`).join("")}</div>
+  <div class="row" style="margin-top:16px"><button type="button" class="primary" id="go">Commencer la série</button>
+  <button type="button" id="rev" ${missed.length?"":"disabled"}>Rejouer mes erreurs (${missed.length})</button></div></div>
+  <div class="panel"><div class="eyebrow">En classe</div><h2>Quiz numérotés</h2>
+  <p class="lead">Ouvrir le quiz dont le numéro est donné en classe. Tout le monde a les mêmes questions, dans le même ordre, avec les réponses repérées par A, B, C, D. Ces quiz mélangent les chapitres et se font sans brouillon.</p>
+  <div class="classgrid">${CLASSE.map((c,i)=>`<button type="button" data-cl="${i}"><b>N°${i+1}</b></button>`).join("")}</div></div>
+  <div class="panel"><div class="row spread"><h3>Mes résultats</h3><span class="pill">${total} points au total · ${hist.length} série${hist.length>1?"s":""}</span></div>
+  <p class="small" style="margin:.3em 0 10px">Meilleure note par thème, sur ${LEN}. Les résultats restent sur cet appareil.</p>
+  <div class="grid2">${["all",...Object.keys(THEMES)].map(k=>{const b=best[k];return `<div class="stat"><div class="row spread"><span>${k==="all"?"Tout mélanger":THEMES[k]}</span><span style="font-variant-numeric:tabular-nums">${b===undefined?"—":b+"/"+LEN}</span></div><div class="bar"><i style="width:${b?100*b/LEN:0}%"></i></div></div>`}).join("")}</div>
+  <div class="row" style="margin-top:14px"><button type="button" id="reset">Effacer mes résultats</button><span class="small" id="resetMsg"></span></div></div>`;
+  v.querySelector(".chips").onclick=e=>{const b=e.target.closest("button");if(!b)return;quiz.theme=b.dataset.th;renderHome(v)};
+  v.querySelector("#go").onclick=()=>startSerie(quiz.theme==="review"?"all":quiz.theme,false);
+  v.querySelector("#rev").onclick=()=>startSerie(null,true);
+  v.querySelector(".classgrid").onclick=e=>{const b=e.target.closest("button");if(!b)return;startClasse(+b.dataset.cl)};
+  const rs=v.querySelector("#reset");let armed=false;
+  rs.onclick=()=>{if(!armed){armed=true;rs.textContent="Confirmer l'effacement";v.querySelector("#resetMsg").textContent="Notes, points et erreurs à revoir seront effacés.";return}
+    best={};missed=[];hist=[];store.set("ap_best",best);store.set("ap_missed",missed);store.set("ap_hist",hist);renderHome(v)};
+}
+function renderPlay(v){
+  const q=QBYID[quiz.list[quiz.i]];quiz.answered=false;
+  const cl=quiz.theme==="classe";
+  const ch=cl?fixedOrder(q):shuffle(q.c.map((c,k)=>({c,k})));
+  const dots=quiz.list.map((_,j)=>`<i class="${j<quiz.res.length?(quiz.res[j]?"ok":"ko"):(j===quiz.i?"cur":"")}"></i>`).join("");
+  v.innerHTML=`${cl?`<div class="classbar">Quiz en classe <b>n°${quiz.classe+1}</b></div>`:""}<div class="panel"><div class="hud"><span class="pill">Question ${quiz.i+1}/${quiz.list.length}</span><div class="dots" aria-hidden="true">${dots}</div><span class="pill" id="pts">${quiz.pts} pt${quiz.pts>1?"s":""}</span></div>
+  <div class="eyebrow" style="margin-top:14px">${THEMES[q.t]}${quiz.theme==="review"?" · erreur à revoir":""}</div>
+  <div class="qtext">${q.q}</div>
+  <div class="choices">${ch.map((o,i)=>`<button type="button" data-k="${o.k}">${cl?`<b class="lettre">${LETTRES[i]}</b>`:""}${o.c}</button>`).join("")}</div>
+  <div id="after"></div></div>
+  <div class="row"><button type="button" id="quit">Abandonner la série</button></div>`;
+  v.querySelector("#quit").onclick=()=>{quiz.mode="home";quiz.theme="all";renderQuiz()};
+  if(cl)v.querySelector("#quit").textContent="Quitter ce quiz";
+  v.querySelector(".choices").onclick=e=>{
+    const b=e.target.closest("button");if(!b||quiz.answered)return;quiz.answered=true;
+    const ok=+b.dataset.k===q.a;quiz.res.push(ok);if(ok)quiz.pts++;
+    v.querySelectorAll(".choices button").forEach(x=>{if(+x.dataset.k===q.a)x.classList.add("good");else if(x===b)x.classList.add("bad");x.disabled=true});
+    if(ok)missed=missed.filter(id=>id!==q.id);else if(!missed.includes(q.id))missed.push(q.id);
+    store.set("ap_missed",missed);
+    v.querySelector("#pts").textContent=quiz.pts+" pt"+(quiz.pts>1?"s":"");
+    v.querySelectorAll(".dots i")[quiz.i].className=ok?"ok":"ko";
+    const last=quiz.i===quiz.list.length-1;
+    const af=v.querySelector("#after");
+    af.innerHTML=`<div class="expl"><span class="verdict ${ok?"okv":"kov"}">${ok?"Exact : +1 point.":"Non."}</span>${cl?` Bonne réponse : <b>${letterOf(q)}</b>.`:""} ${q.e}</div>
+    <div class="row" style="margin-top:12px"><button type="button" class="primary" id="next">${last?"Voir ma note":"Question suivante"}</button><button type="button" id="rap" aria-expanded="false">Rappel de cours</button></div>
+    <div class="rappel" id="rapbox" hidden>${RAPPEL[q.t]}</div>`;
+    tex(af);
+    af.querySelector("#rap").onclick=ev=>{const r=af.querySelector("#rapbox");r.hidden=!r.hidden;ev.target.setAttribute("aria-expanded",String(!r.hidden))};
+    af.querySelector("#next").onclick=()=>{if(last)finish();else{quiz.i++;renderQuiz()}};
+    af.querySelector("#next").focus();
+  };
+  tex(v);
+}
+function finish(){
+  quiz.mode="end";
+  const n=quiz.list.length;
+  if(quiz.theme!=="review"&&quiz.theme!=="classe"&&n===LEN){if(best[quiz.theme]===undefined||quiz.pts>best[quiz.theme])best[quiz.theme]=quiz.pts;store.set("ap_best",best)}
+  hist.push({th:quiz.theme,pts:quiz.pts,n,d:Date.now()});if(hist.length>200)hist=hist.slice(-200);store.set("ap_hist",hist);
+  renderQuiz();
+}
+function renderEnd(v){
+  const n=quiz.list.length,p=quiz.pts;
+  const msg=p===n?"Tout juste. Passe à un autre thème, ou reviens dans quelques jours pour vérifier que c'est su.":p>=0.7*n?"Bien. Rejoue tes erreurs pour finir le travail.":p>=0.4*n?"C'est un début. Ouvre le rappel de cours du thème, puis rejoue tes erreurs.":"Ce thème n'est pas encore su. Commence par les fiches « Cours à savoir », puis refais une série.";
+  const wrong=quiz.list.filter((id,j)=>!quiz.res[j]).map(id=>QBYID[id]);
+  const cl=quiz.theme==="classe";
+  const label=cl?`Quiz en classe n°${quiz.classe+1}`:quiz.theme==="review"?"Erreurs à revoir":quiz.theme==="all"?"Tout mélanger":THEMES[quiz.theme];
+  v.innerHTML=`<div class="panel"><div class="eyebrow">${label}</div><div class="row" style="gap:18px;align-items:flex-end;margin-top:6px"><span class="note">${p}/${n}</span>
+  <p style="margin:0;max-width:52ch">${msg}</p></div>
+  <div class="row" style="margin-top:16px"><button type="button" class="primary" id="again">${cl?"Refaire ce quiz":"Nouvelle série"}</button><button type="button" id="rev" ${missed.length?"":"disabled"}>Rejouer mes erreurs (${missed.length})</button><button type="button" id="home">Accueil du quiz</button></div></div>
+  ${wrong.length?`<div class="panel"><h3>Les questions ratées</h3><ul class="missed" style="margin-top:10px">${wrong.map(q=>`<li><div>${q.q}</div><div class="good-ans">Réponse : ${cl?letterOf(q)+". ":""}${q.c[q.a]}</div></li>`).join("")}</ul></div>`:""}`;
+  v.querySelector("#again").onclick=()=>cl?startClasse(quiz.classe):startSerie(quiz.theme==="review"?"all":quiz.theme,false);
+  v.querySelector("#rev").onclick=()=>startSerie(null,true);
+  v.querySelector("#home").onclick=()=>{quiz.mode="home";if(quiz.theme==="review"||cl)quiz.theme="all";renderQuiz()};
+  tex(v);
+}
+
+/* ======================= COURS À SAVOIR ======================= */
+const CARDS=[
+{id:"c1",t:"res",r:"Qu'est-ce que l'univers ? un résultat ?",v:R`L'univers $\Omega$ est l'ensemble des résultats possibles. Un résultat est un élément $\omega$ de $\Omega$ : $\omega\in\Omega$.`},
+{id:"c2",t:"res",r:"Qu'est-ce qu'un événement ?",v:R`Une partie $A$ de $\Omega$ : $A\in\mathscr P(\Omega)$. Les événements élémentaires sont les singletons $\{\omega\}$.`},
+{id:"c31",t:"res",r:R`Probabilité d'un événement $A$ en situation d'équiprobabilité ?`,v:R`$\mathbb P(A)=\dfrac{\operatorname{card}(A)}{\operatorname{card}(\Omega)}=\dfrac{\text{nombre de cas favorables}}{\text{nombre de cas possibles}}$.`},
+{id:"c3",t:"par",r:R`Que signifie « $A$ est une partie de $E$ » ?`,v:R`Tout élément de $A$ est un élément de $E$ ; on note $A\subset E$.`},
+{id:"c4",t:"par",r:R`$\operatorname{card}\big(\mathscr P(E)\big)$ si $\operatorname{card}(E)=n$ ? Pourquoi ?`,v:R`$2^n$. ① Les $\mathscr P_p(E)$ (ensembles des parties de $E$ à $p$ éléments), $0\leqslant p\leqslant n$, forment une partition de $\mathscr P(E)$ : $\sum_{p=0}^n\binom np=2^n$. ② Bijection entre $\mathscr P(E)$ et $\{0;1\}^n$ : $x_i=1$ si $e_i\in A$, $0$ sinon.`},
+{id:"c39",t:"indic",r:R`Définition de la fonction indicatrice $\mathbf 1_A$ d'une partie $A$ de $E$.`,v:R`L'application de $E$ dans $\{0,1\}$ qui à $x$ associe $1$ si $x\in A$ et $0$ sinon.`},
+{id:"c40",t:"indic",r:R`$\mathbf 1_{A\cap B}$ et $\mathbf 1_{\overline A}$ en fonction de $\mathbf 1_A$ et $\mathbf 1_B$ ?`,v:R`$\mathbf 1_{A\cap B}=\mathbf 1_A\times\mathbf 1_B$ et $\mathbf 1_{\overline A}=1-\mathbf 1_A$.`},
+{id:"c41",t:"indic",r:R`Traduire $A=B$ et $A\subset B$ avec les indicatrices. Que valent $\mathbf 1_\varnothing$ et $\mathbf 1_E$ ?`,v:R`$\mathbf 1_A=\mathbf 1_B\iff A=B$ ; $\mathbf 1_A\leqslant\mathbf 1_B\iff A\subset B$. $\mathbf 1_\varnothing=0$ et $\mathbf 1_E=1$.`},
+{id:"c42",t:"indic",r:R`Cardinal de $A$, puis de $A\cap B$, à l'aide d'indicatrices ($E$ fini).`,v:R`$\operatorname{card}(A)=\sum_{x\in E}\mathbf 1_A(x)$ et $\operatorname{card}(A\cap B)=\sum_{x\in A}\mathbf 1_B(x)$.`},
+{id:"c43",t:"indic",r:R`Loi, espérance et variance de $\mathbf 1_A$ si $A$ est un événement ?`,v:R`$\mathbf 1_A\hookrightarrow\mathcal B\big(\mathbb P(A)\big)$, $\mathbb E(\mathbf 1_A)=\mathbb P(A)$, $V(\mathbf 1_A)=\mathbb P(A)\big(1-\mathbb P(A)\big)$.`},
+{id:"c5",t:"den",r:R`Nombre de $p$-listes d'un ensemble à $n$ éléments ? Situation type ?`,v:R`$n^p$. Tirages successifs avec remise.`},
+{id:"c6",t:"den",r:R`$E$ est un ensemble de cardinal $n$ et $p\leqslant n$. Nombre de $p$-listes sans répétition de $E$ ? Situation type ?`,v:R`$n(n-1)\cdots(n-p+1)$ ($p$ facteurs), soit $\dfrac{n!}{(n-p)!}$. Tirages successifs sans remise.`},
+{id:"c7",t:"den",r:R`Qu'est-ce qu'une permutation de $E$ ? Combien y en a-t-il si $\operatorname{card}(E)=n$ ?`,v:R`Une liste contenant exactement une fois chaque élément de $E$. Il y en a $n!$.`},
+{id:"c8",t:"den",r:R`$E$ est un ensemble de cardinal $n$ et $p\leqslant n$. Qu'est-ce qu'une $p$-combinaison de $E$ ? Combien y en a-t-il ? Situation type ?`,v:R`Une partie de $E$ à $p$ éléments. Il y en a $\dfrac1{p!}\,n(n-1)\cdots(n-p+1)=\dbinom np$. Tirage simultané.`},
+{id:"c9",t:"den",r:"Formule du crible pour deux ensembles ?",v:R`$\operatorname{card}(A\cup B)=\operatorname{card}(A)+\operatorname{card}(B)-\operatorname{card}(A\cap B)$`},
+{id:"c10",t:"ind",r:R`Définition : $A$ et $B$ incompatibles.`,v:R`$A\cap B=\varnothing$.`},
+{id:"c11",t:"ind",r:R`Définition : $A$ et $B$ indépendants.`,v:R`$\mathbb P(A\cap B)=\mathbb P(A)\,\mathbb P(B)$.`},
+{id:"c12",t:"ind",r:R`Définition : $A_1,\dots,A_n$ mutuellement indépendants.`,v:R`Pour toute partie $J$ de $[\![1;n]\!]$ : $\mathbb P\Big(\bigcap_{j\in J}A_j\Big)=\prod_{j\in J}\mathbb P(A_j)$. Mutuellement entraîne 2 à 2 ; la réciproque est fausse.`},
+{id:"c32",t:"ind",r:R`$A$ et $B$ sont indépendants. Que dire de $A$ et $\overline B$ ? de $\overline A$ et $\overline B$ ?`,v:R`Ils sont aussi indépendants : $A$ et $B$ indépendants équivaut à $A$ et $\overline B$ indépendants, à $\overline A$ et $B$ indépendants, à $\overline A$ et $\overline B$ indépendants.`},
+{id:"c13",t:"fpt",r:R`Définition : $(A_1,\dots,A_n)$ système complet d'événements.`,v:R`① $\bigcup_{k=1}^n A_k=\Omega$ ; ② $\forall (i,j)\in[\![1;n]\!]^2,\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$.`},
+{id:"c14",t:"cond",r:R`Définition de la probabilité sachant $A$.`,v:R`Si $\mathbb P(A)\neq0$, l'application $\mathbb P_A:B\mapsto\dfrac{\mathbb P(A\cap B)}{\mathbb P(A)}$ est une probabilité sur $\big(\Omega,\mathscr P(\Omega)\big)$. On note aussi $\mathbb P(B\,|\,A)$.`},
+{id:"c15",t:"fpt",r:"Formule des probabilités totales : les deux versions (hypothèses et conclusion).",v:R`① Si $(A_1,\dots,A_n)$ est un système complet d'événements, alors pour tout $B$ : $\mathbb P(B)=\sum_{i=1}^n\mathbb P(A_i\cap B)$.<br>② Si $(A_1,\dots,A_n)$ est un système complet d'événements non négligeables ($\mathbb P(A_i)\neq0$ pour tout $i$), alors pour tout $B$ : $\mathbb P(B)=\sum_{i=1}^n\mathbb P(A_i)\times\mathbb P_{A_i}(B)$.`},
+{id:"c33",t:"fpt",r:R`Que vaut $\sum_{i=1}^n\mathbb P(A_i)$ si $(A_1,\dots,A_n)$ est un système complet d'événements ? Que signifie « $A$ négligeable » ?`,v:R`$\sum_{i=1}^n\mathbb P(A_i)=1$. $A$ est négligeable si $\mathbb P(A)=0$.`},
+{id:"c16",t:"cond",r:"Formule des probabilités composées.",v:R`Si $\mathbb P(A_1\cap\dots\cap A_{n-1})\neq0$ : $\mathbb P(A_1\cap\dots\cap A_n)=\mathbb P(A_1)\,\mathbb P_{A_1}(A_2)\cdots\mathbb P_{A_1\cap\dots\cap A_{n-1}}(A_n)$.`},
+{id:"c25",t:"cond",r:R`$\mathbb P_A$ est-elle une probabilité ? Conséquence pour $\mathbb P_A(\overline B)$ ?`,v:R`Oui : si $\mathbb P(A)\neq0$, $B\mapsto\mathbb P_A(B)$ est une probabilité. Donc $\mathbb P_A(\overline B)=1-\mathbb P_A(B)$. Attention : $\mathbb P_{\overline A}(B)$ n'est pas $1-\mathbb P_A(B)$.`},
+{id:"c26",t:"cond",r:R`Lien entre indépendance et probabilité conditionnelle (avec $\mathbb P(A)\neq0$) ?`,v:R`Conséquence de la définition : $A$ et $B$ sont indépendants si et seulement si $\mathbb P_A(B)=\mathbb P(B)$.`},
+{id:"c17",t:"fpt",r:"Formule de Bayes (hypothèses et conclusion).",v:R`Si $(A_1,\dots,A_n)$ est un système complet d'événements non négligeables et $B$ un événement non négligeable, alors pour tout $j$ : $\mathbb P_B(A_j)=\dfrac{\mathbb P(A_j)\times\mathbb P_{A_j}(B)}{\sum_{i=1}^n\mathbb P(A_i)\times\mathbb P_{A_i}(B)}$.`},
+{id:"c44",t:"dist",r:"Probabilités composées ou probabilités totales : comment choisir ?",v:R`Composées : probabilité d'une intersection, un seul chemin de l'arbre, on multiplie. Totales : probabilité d'un événement atteint par plusieurs chemins, on additionne les chemins. Chaque terme $\mathbb P(A_i)\mathbb P_{A_i}(B)$ des totales se calcule par les composées.`},
+{id:"c55",t:"dist",r:R`$\mathbb P(A)\times\mathbb P_A(B)$ : probabilités totales ou composées ? Que calcule-t-on ?`,v:R`Probabilités <b>composées</b>. On obtient $\mathbb P(A\cap B)$ (avec $\mathbb P(A)\neq0$).`},
+{id:"c56",t:"dist",r:R`$\mathbb P(A_1)\,\mathbb P_{A_1}(A_2)\,\mathbb P_{A_1\cap A_2}(A_3)$ : probabilités totales ou composées ? Que calcule-t-on ?`,v:R`Probabilités <b>composées</b>. On obtient $\mathbb P(A_1\cap A_2\cap A_3)$ (avec $\mathbb P(A_1\cap A_2)\neq0$).`},
+{id:"c57",t:"dist",r:R`$\sum_{i=1}^n\mathbb P(A_i)\,\mathbb P_{A_i}(B)$ : probabilités totales ou composées ? Que calcule-t-on ?`,v:R`Probabilités <b>totales</b>. On obtient $\mathbb P(B)$, si $(A_1,\dots,A_n)$ est un système complet d'événements non négligeables.`},
+{id:"c58",t:"dist",r:R`$\mathbb P(A)\,\mathbb P_A(B)+\mathbb P(\overline A)\,\mathbb P_{\overline A}(B)$ : probabilités totales ou composées ? Que calcule-t-on ?`,v:R`Probabilités <b>totales</b>, avec le système complet $(A,\overline A)$. On obtient $\mathbb P(B)$ (avec $\mathbb P(A)\neq0$ et $\mathbb P(\overline A)\neq0$).`},
+{id:"c59",t:"dist",r:R`$\sum_{i=1}^n\mathbb P(A_i\cap B)$ : probabilités totales ou composées ? Que calcule-t-on ?`,v:R`Probabilités <b>totales</b>, version ①. On obtient $\mathbb P(B)$ dès que $(A_1,\dots,A_n)$ est un système complet d'événements.`},
+{id:"c60",t:"dist",r:R`Urne de 3 rouges et 2 blanches, tirages sans remise. Calcul : $\frac35\times\frac24\times\frac13$. Probabilités totales ou composées ? Que calcule-t-on ?`,v:R`Probabilités <b>composées</b>. On obtient $\mathbb P(R_1\cap R_2\cap R_3)=\frac1{10}$, la probabilité de tirer trois rouges.`},
+{id:"c61",t:"dist",r:R`Usine : $M_1$ fabrique 60 % des pièces, $M_2$ 40 % ; 5 % des pièces de $M_1$ et 10 % de celles de $M_2$ sont défectueuses. Calcul : $0{,}6\times0{,}05+0{,}4\times0{,}1$. Probabilités totales ou composées ? Que calcule-t-on ?`,v:R`Probabilités <b>totales</b> avec le système complet $(M_1,M_2)$. On obtient $\mathbb P(D)=0{,}07$, la probabilité qu'une pièce prise au hasard soit défectueuse.`},
+{id:"c62",t:"dist",r:R`Usine : $M_1$ fabrique 60 % des pièces, $M_2$ 40 % ; 5 % des pièces de $M_1$ et 10 % de celles de $M_2$ sont défectueuses. Calcul : $0{,}6\times0{,}05$. Probabilités totales ou composées ? Que calcule-t-on ?`,v:R`Probabilités <b>composées</b>. On obtient $\mathbb P(M_1\cap D)=0{,}03$, la probabilité qu'une pièce vienne de $M_1$ <b>et</b> soit défectueuse. Ce n'est pas $\mathbb P(D)$.`},
+{id:"c63",t:"dist",r:R`$\dfrac{\mathbb P(A_j)\,\mathbb P_{A_j}(B)}{\sum_{i=1}^n\mathbb P(A_i)\,\mathbb P_{A_i}(B)}$ : où interviennent les probabilités totales et les probabilités composées ?`,v:R`Au numérateur, les probabilités <b>composées</b> donnent $\mathbb P(A_j\cap B)$. Au dénominateur, les probabilités <b>totales</b> donnent $\mathbb P(B)$. Le quotient est $\mathbb P_B(A_j)$ (formule de Bayes).`},
+{id:"c64",t:"dist",r:"La formule des probabilités composées fait-elle apparaître une somme ou un produit ?",v:R`Un <b>produit</b> : $\mathbb P(A_1\cap\dots\cap A_n)=\mathbb P(A_1)\,\mathbb P_{A_1}(A_2)\cdots\mathbb P_{A_1\cap\dots\cap A_{n-1}}(A_n)$.`},
+{id:"c65",t:"dist",r:"La formule des probabilités totales fait-elle apparaître une somme ou un produit ?",v:R`Une <b>somme</b> : $\mathbb P(B)=\sum_{i=1}^n\mathbb P(A_i\cap B)$, ou $\sum_{i=1}^n\mathbb P(A_i)\times\mathbb P_{A_i}(B)$ (chaque terme est alors un produit).`},
+{id:"c66",t:"dist",r:"La formule de Bayes fait-elle apparaître une somme ou un produit ?",v:R`Les deux : un <b>produit</b> au numérateur et une <b>somme</b> au dénominateur. $\mathbb P_B(A_j)=\dfrac{\mathbb P(A_j)\,\mathbb P_{A_j}(B)}{\sum_{i=1}^n\mathbb P(A_i)\,\mathbb P_{A_i}(B)}$.`},
+{id:"c67",t:"union",r:"Théorème : probabilité d'une réunion disjointe (hypothèse et conclusion). Somme ou produit ?",v:R`Si $\forall (i,j)\in[\![1;n]\!]^2,\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$, alors $\mathbb P\Big(\bigcup_{i=1}^n A_i\Big)=\sum_{i=1}^n\mathbb P(A_i)$ : une <b>somme</b>.`},
+{id:"c68",t:"union",r:R`Formule du crible à l'ordre 2 : $\mathbb P(A\cup B)=$ ?`,v:R`$\mathbb P(A\cup B)=\mathbb P(A)+\mathbb P(B)-\mathbb P(A\cap B)$. Même formule pour les cardinaux.`},
+{id:"c69",t:"union",r:R`Formule du crible à l'ordre 3 : $\mathbb P(A\cup B\cup C)=$ ?`,v:R`$\mathbb P(A)+\mathbb P(B)+\mathbb P(C)-\mathbb P(A\cap B)-\mathbb P(A\cap C)-\mathbb P(B\cap C)+\mathbb P(A\cap B\cap C)$. Même formule pour les cardinaux.`},
+{id:"c70",t:"union",r:"Comment vérifier qu'une famille d'événements est un système complet ?",v:R`On vérifie ① que leur réunion est $\Omega$ (chaque résultat en réalise au moins un) et ② que $\forall (i,j),\ i\neq j\Longrightarrow A_i\cap A_j=\varnothing$ (aucun résultat n'en réalise deux).`},
+{id:"c18",t:"loi",r:R`Loi de Bernoulli $\mathcal B(p)$ : définition, espérance, variance.`,v:R`$p\in\,]0,1[$, $X(\Omega)=\{0,1\}$, $\mathbb P([X=1])=p$, $\mathbb P([X=0])=1-p$. $\mathbb E(X)=p$, $V(X)=p(1-p)$. Si $A$ est un événement, $\mathbf 1_A\hookrightarrow\mathcal B\big(\mathbb P(A)\big)$.`},
+{id:"c19",t:"loi",r:R`Loi binomiale $\mathscr B(n,p)$ : situation type, loi, espérance, variance.`,v:R`Schéma de Bernoulli : $n$ épreuves identiques et indépendantes, succès de probabilité $p$, $X$ = nombre de succès. $X(\Omega)=[\![0;n]\!]$, $\mathbb P([X=k])=\binom nk p^k(1-p)^{n-k}$. $\mathbb E(X)=np$, $V(X)=np(1-p)$.`},
+{id:"c34",t:"loi",r:R`Somme de $n$ variables de Bernoulli : quelle loi, sous quelles hypothèses ?`,v:R`Si $X_1,\dots,X_n$ sont mutuellement indépendantes et suivent toutes $\mathcal B(p)$, alors $X_1+\dots+X_n\hookrightarrow\mathscr B(n,p)$.`},
+{id:"c20",t:"loi",r:R`Loi uniforme sur $[\![1;n]\!]$, puis sur $[\![a;b]\!]$ : loi, espérance, variance.`,v:R`$\mathcal U([\![1;n]\!])$ : $\mathbb P([X=i])=\frac1n$, $\mathbb E(X)=\frac{n+1}2$, $V(X)=\frac{n^2-1}{12}$.<br>$\mathcal U([\![a;b]\!])$ : $\mathbb P([X=i])=\frac1{b-a+1}$, $\mathbb E(X)=\frac{a+b}2$, $V(X)=\frac{(b-a+1)^2-1}{12}$.`},
+{id:"c35",t:"loi",r:"Variable certaine égale à a : loi, espérance, variance.",v:R`$X(\Omega)=\{a\}$, $\mathbb P([X=a])=1$, $\mathbb E(X)=a$, $V(X)=0$.`},
+{id:"c36",t:"var",r:"Qu'est-ce qu'une variable aléatoire sur Ω ?",v:R`Une application de $\Omega$ dans $\mathbb R$. Si $X(\Omega)=\{x_1,\dots,x_r\}$, les $[X=x_i]$ forment un système complet d'événements.`},
+{id:"c27",t:"var",r:R`Que faut-il faire pour déterminer la loi de $X$ ?`,v:R`① Donner $X(\Omega)$ ; ② donner $\mathbb P([X=x_i])$ pour toutes les valeurs $x_i$ de $X(\Omega)$. Ces probabilités ont pour somme 1.`},
+{id:"c28",t:"var",r:R`Définition de $\mathbb E(X)$ pour une variable aléatoire finie.`,v:R`$\mathbb E(X)=\sum_{x\in X(\Omega)}x\,\mathbb P([X=x])$.`},
+{id:"c29",t:"var",r:"Définition de la fonction de répartition de X.",v:R`$F:x\mapsto\mathbb P([X\leqslant x])$, de $\mathbb R$ dans $[0;1]$. Pour $a\leqslant b$ : $\mathbb P([a\lt X\leqslant b])=F(b)-F(a)$.`},
+{id:"c30",t:"var",r:R`Définition de $V(X)$. Quel est son signe ? Que dire si $V(X)=0$ ?`,v:R`$V(X)=\mathbb E\big((X-\mathbb E(X))^2\big)\geqslant0$. L'écart-type est $\sigma=\sqrt{V(X)}$. Si $V(X)=0$, alors $\mathbb P([X=\mathbb E(X)])=1$ : $X$ est quasi-certaine.`},
+{id:"c37",t:"var",r:"Définition : X et Y sont indépendantes.",v:R`Pour tout $(x,y)\in X(\Omega)\times Y(\Omega)$ : $\mathbb P([X=x]\cap[Y=y])=\mathbb P([X=x])\times\mathbb P([Y=y])$. Alors $u(X)$ et $v(Y)$ sont aussi indépendantes.`},
+{id:"c38",t:"var",r:R`Variable centrée, réduite ? Variable centrée réduite associée à $X$ ?`,v:R`Centrée : $\mathbb E(X)=0$. Réduite : $V(X)=1$. Si $V(X)\neq0$, $X^*=\dfrac{X-\mathbb E(X)}{\sigma_X}$ est centrée réduite.`},
+{id:"c21",t:"var",r:"Théorème de transfert.",v:R`$\mathbb E\big(\varphi(X)\big)=\sum_{x\in X(\Omega)}\varphi(x)\,\mathbb P([X=x])$.`},
+{id:"c22",t:"var",r:"Formule de Kœnig-Huygens.",v:R`$V(X)=\mathbb E(X^2)-\mathbb E(X)^2$.`},
+{id:"c23",t:"var",r:R`$\mathbb E(aX+b)$ et $V(aX+b)$ ?`,v:R`$\mathbb E(aX+b)=a\,\mathbb E(X)+b$ et $V(aX+b)=a^2\,V(X)$.`},
+{id:"c24",t:"var",r:R`$\mathbb E(XY)$ et $V(X+Y)$ : à quelle condition ?`,v:R`Si $X$ et $Y$ sont <b>indépendantes</b> : $\mathbb E(XY)=\mathbb E(X)\,\mathbb E(Y)$ et $V(X+Y)=V(X)+V(Y)$. Contre-exemple sans indépendance : $Y=X$ donne $V(2X)=4V(X)$.`}
+];
+let boxes=store.get("ap_boxes",{});
+let fc={filter:"all",cur:null,flipped:false};
+function boxOf(id){return boxes[id]||1}
+function pickCard(){const list=CARDS.filter(c=>fc.filter==="all"||c.t===fc.filter);const m=Math.min(...list.map(c=>boxOf(c.id)));
+  let cand=list.filter(c=>boxOf(c.id)===m);if(cand.length>1&&fc.cur)cand=cand.filter(c=>c.id!==fc.cur.id);fc.cur=cand[Math.floor(Math.random()*cand.length)];fc.flipped=false}
+function renderCours(){
+  const v=document.getElementById("v-cours");const f=["all",...Object.keys(THEMES).filter(k=>CARDS.some(c=>c.t===k))];
+  v.innerHTML=`<div class="panel"><div class="eyebrow">Cours à savoir</div><h2>Se réciter le cours</h2>
+  <p class="lead">Lire la question, <b>écrire la réponse sur un brouillon sans regarder</b>, puis retourner la fiche. « Je savais » envoie la fiche dans la boîte suivante ; « À revoir » la renvoie en boîte 1. Les fiches de la boîte la plus basse reviennent en premier.</p>
+  <div class="chips" role="group" aria-label="Thème">${f.map(k=>`<button type="button" data-f="${k}" aria-pressed="${fc.filter===k}">${k==="all"?"Tout le cours":THEMES[k]}</button>`).join("")}</div></div>
+  <div class="panel flash" id="flash"></div>
+  <div class="panel"><div class="row spread"><h3>Mes boîtes</h3><button type="button" id="resetBoxes">Tout remettre en boîte 1</button></div><div class="boxes" id="boxes" style="margin-top:10px"></div></div>`;
+  v.querySelector(".chips").onclick=e=>{const b=e.target.closest("button");if(!b)return;fc.filter=b.dataset.f;fc.cur=null;renderCours()};
+  v.querySelector("#resetBoxes").onclick=()=>{boxes={};store.set("ap_boxes",boxes);pickCard();renderFlash();renderBoxes()};
+  if(!fc.cur)pickCard();renderFlash();renderBoxes();
+}
+function renderFlash(){
+  const el=document.getElementById("flash");const c=fc.cur;
+  el.innerHTML=`<div class="eyebrow">${THEMES[c.t]} · boîte ${boxOf(c.id)}</div><div class="recto">${c.r}</div>
+  ${fc.flipped?`<div class="verso">${c.v}</div><div class="row"><button type="button" class="primary" data-ok="1">Je savais</button><button type="button" data-ok="0">À revoir</button></div>`:`<div class="row"><button type="button" class="primary" id="flip">Voir la réponse</button></div>`}`;
+  el.onclick=e=>{const b=e.target.closest("button");if(!b)return;
+    if(b.id==="flip"){fc.flipped=true;renderFlash();return}
+    if(b.dataset.ok!==undefined){boxes[c.id]=b.dataset.ok==="1"?Math.min(3,boxOf(c.id)+1):1;store.set("ap_boxes",boxes);pickCard();renderFlash();renderBoxes()}};
+  tex(el);
+}
+function renderBoxes(){const el=document.getElementById("boxes");if(!el)return;const list=CARDS.filter(c=>fc.filter==="all"||c.t===fc.filter);
+  const n=[1,2,3].map(k=>list.filter(c=>boxOf(c.id)===k).length);
+  el.innerHTML=`<span>Boîte 1 (à apprendre) : ${n[0]}</span><span>Boîte 2 : ${n[1]}</span><span>Boîte 3 (su) : ${n[2]}</span>`}
+
+/* ======================= MÉTHODE ======================= */
+function renderMethode(){
+  const v=document.getElementById("v-methode");
+  v.innerHTML=R`<div class="panel"><div class="eyebrow">Comment apprendre</div><h2>Apprendre son cours de maths</h2>
+  <ol>
+  <li><b>Relire n'est pas apprendre.</b> On connaît une définition quand on peut l'écrire sans regarder, avec ses hypothèses. Une page relue paraît familière, mais cela ne prouve pas qu'on la sait.</li>
+  <li><b>Se tester.</b> Cacher, écrire, vérifier, corriger en rouge. L'onglet « Cours à savoir » sert à ça : on écrit la réponse <i>avant</i> de retourner la fiche. Le quiz vérifie ensuite qu'on sait s'en servir.</li>
+  <li><b>Espacer.</b> 10 minutes le soir du cours, puis 2 jours après, puis une semaine après. Quatre séances de 10 minutes valent mieux qu'une séance de 40 minutes la veille de la colle.</li>
+  <li><b>Pour chaque théorème, apprendre quatre choses</b> : les hypothèses, la conclusion, un exemple, et ce qui se passe si une hypothèse manque.
+  <span class="phrase">$V(X+Y)=V(X)+V(Y)$ demande $X$ et $Y$ indépendantes. Si $Y=X$ : $V(2X)=4V(X)$.</span></li>
+  <li><b>Séparer les mots qui se ressemblent.</b> Résultat / événement, liste / partie, <span style="white-space:nowrap">$\in$ / $\subset$,</span> incompatibles / indépendants. Pour chaque paire, savoir donner un exemple de l'un qui n'est pas l'autre.</li>
+  <li><b>Apprendre les phrases de rédaction</b>, mot pour mot :
+  <span class="phrase">« $(A_1,\dots,A_n)$ est un système complet d'événements et $\mathbb P(A_i)\neq0$ pour tout $i$. D'après la formule des probabilités totales, … »</span>
+  <span class="phrase">« Cette expérience est constituée de $n$ épreuves de Bernoulli identiques et indépendantes (succès : … de probabilité $p$). $X$ compte le nombre de succès, donc $X\hookrightarrow\mathscr B(n,p)$. »</span></li>
+  <li><b>Avant une colle</b>, réciter les questions de cours à voix haute pendant 15 minutes. Le colleur commence par là.</li>
+  </ol></div>
+  <div class="panel"><h3>Mon plan pour la semaine</h3>
+  <p class="small">Cocher au fur et à mesure (reste sur cet appareil).</p>
+  <div class="stack" id="plan" style="gap:6px;margin-top:8px"></div></div>`;
+  const tasks=["Le soir du cours : 10 min de fiches « Cours à savoir »","2 jours après : une série de quiz par thème","Rejouer mes erreurs jusqu'à ce que la liste soit vide","Une semaine après : toutes les fiches de la boîte 1, puis une série « Tout mélanger »","Veille de colle : réciter à voix haute les définitions et théorèmes"];
+  const done=store.get("ap_plan",{});
+  const p=v.querySelector("#plan");
+  p.innerHTML=tasks.map((t,i)=>`<label class="row" style="gap:10px;align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" id="plan${i}" ${done[i]?"checked":""} style="margin-top:.35em"><span>${t}</span></label>`).join("");
+  p.addEventListener("change",e=>{const m=e.target.id.match(/plan(\d+)/);if(!m)return;done[m[1]]=e.target.checked;store.set("ap_plan",done)});
+  tex(v);
+}
+
+/* ======================= ROUTAGE ======================= */
+const VIEWS=["quiz","cours","methode"];const rendered={};
+function show(){
+  let h=(location.hash||"#quiz").slice(1);
+  const mc=h.match(/^classe-(\d+)$/);if(mc)h="quiz";
+  if(!VIEWS.includes(h))h="quiz";
+  VIEWS.forEach(k=>{document.getElementById("v-"+k).hidden=k!==h});
+  document.querySelectorAll("nav.tabs a").forEach(a=>{if(a.dataset.view===h)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  if(!rendered[h]){rendered[h]=true;({quiz:renderQuiz,cours:renderCours,methode:renderMethode})[h]()}
+  if(mc)startClasse(+mc[1]-1);
+}
+window.addEventListener("hashchange",show);
+show();
+</script>
+
+</body>
+</html>
